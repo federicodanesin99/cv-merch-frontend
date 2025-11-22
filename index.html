@@ -423,7 +423,11 @@
         
         const currentColor = selectedColors[product.id];
         const currentImages = getImagesForColor(product, currentColor);
-        const hasLaunchPrice = product.price < product.basePrice;
+        
+        // 🆕 Determina se mostrare prezzo barrato
+        // product.price è già il prezzo corretto (lancio o base) settato dal backend
+        // Dobbiamo mostrare basePrice barrato se esiste launchPrice e launch_prices_active
+        const showOriginalPrice = product.basePrice && product.price < product.basePrice;
         
         return `
           <div class="product-card bg-white rounded-lg shadow-md overflow-hidden">
@@ -441,6 +445,12 @@
               <div class="absolute top-3 left-3 bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
                 ${currentColor}
               </div>
+              
+              ${showOriginalPrice ? `
+                <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                  -${Math.round((1 - product.price / product.basePrice) * 100)}%
+                </div>
+              ` : ''}
             </div>
             
             <div class="p-4 md:p-6">
@@ -448,8 +458,8 @@
               ${product.description ? `<p class="text-sm text-gray-600 mb-3">${product.description}</p>` : ''}
               
               <div class="flex items-center gap-3 mb-4">
-                ${hasLaunchPrice ? `
-                  <p class="text-gray-400 line-through text-lg">€${product.basePrice.toFixed(2)}</p>
+                ${showOriginalPrice ? `
+                  <p class="text-lg text-gray-400 line-through">€${product.basePrice.toFixed(2)}</p>
                   <p class="text-2xl md:text-3xl font-bold text-red-600">€${product.price.toFixed(2)}</p>
                 ` : `
                   <p class="text-2xl md:text-3xl font-bold text-gray-900">€${product.price.toFixed(2)}</p>
@@ -473,7 +483,7 @@
                 <div class="flex justify-between items-center mb-2">
                   <label class="text-xs md:text-sm font-semibold">Taglia</label>
                   ${product.sizeGuide ? `
-                    <button onclick="showSizeGuide('${product.sizeGuide.replace(/'/g, "\\'")}')" class="text-xs text-blue-600 hover:underline">
+                    <button onclick="showSizeGuide(\`${product.sizeGuide.replace(/`/g, '\\`')}\`)" class="text-xs text-blue-600 hover:underline">
                       📏 Guida taglie
                     </button>
                   ` : ''}
