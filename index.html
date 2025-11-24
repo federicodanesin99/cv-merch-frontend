@@ -81,13 +81,15 @@
     @media (max-width: 768px) {
     .image-carousel img {
       aspect-ratio: 3 / 4; /* Verticale: 3:4 ratio */
-      object-fit: cover;
-      }
-  
-    .carousel-container {
-      background: #f3f4f6;
-      }
+      object-fit: contain; /* 🆕 Mostra tutta la felpa */
+      background-color: #f3f4f6; /* Sfondo grigio chiaro per le bande */
     }
+    
+    .carousel-container {
+      background: #f3f4f6; /* Match con lo sfondo */
+    }
+  }
+    
     
     .cart-footer {
       transition: all 0.3s ease;
@@ -118,7 +120,13 @@
     }
     .carousel-container {
   position: relative;
+  background: #f9fafb; /* Sfondo per desktop */
 }
+
+    .carousel-container img {
+      object-fit: contain; /* 🆕 Mostra tutta la felpa anche su desktop */
+      background-color: #f9fafb;
+    }
 
     .carousel-btn {
       position: absolute;
@@ -1071,7 +1079,7 @@
           <span id="copy-text">Copia Codice</span>
         </button>
       </div>
-      
+
       <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-left">
         <p class="text-xs font-semibold text-yellow-800 mb-1">⚠️ IMPORTANTE</p>
         <p class="text-xs text-yellow-700">
