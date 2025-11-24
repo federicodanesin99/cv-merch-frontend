@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordine Confermato - CLASSE VENETA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  
+  <div class="max-w-2xl w-full">
+    <!-- Header con Logo -->
+    <div class="text-center mb-8">
+      <img src="logo.png" alt="Logo" class="w-20 h-20 mx-auto mb-4 rounded-lg object-cover" />
+      <h1 class="text-3xl md:text-4xl font-bold">CLASSE VENETA</h1>
+    </div>
+
+    <!-- Card Principale -->
+    <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-10 text-center">
+      
+      <!-- Icona Successo -->
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <h2 class="text-2xl md:text-3xl font-bold mb-3">Ordine Confermato!</h2>
+      <p class="text-gray-600 mb-6">Il tuo ordine è stato registrato con successo</p>
+
+      <!-- Info Ordine -->
+      <div class="bg-gray-50 rounded-lg p-6 mb-6">
+        <div class="mb-4">
+          <p class="text-sm text-gray-500 mb-1">CODICE ORDINE</p>
+          <p id="order-code" class="text-xl md:text-2xl font-bold font-mono text-gray-800">
+            <!-- JavaScript inserirà il codice -->
+          </p>
+        </div>
+        
+        <div class="border-t pt-4">
+          <p class="text-sm text-gray-500 mb-1">IMPORTO PAGATO</p>
+          <p id="order-amount" class="text-3xl font-bold text-green-600">
+            <!-- JavaScript inserirà l'importo -->
+          </p>
+        </div>
+      </div>
+
+      <!-- Cosa Succede Ora -->
+      <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6 text-left">
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2">
+          <span class="text-2xl">📋</span>
+          Cosa succede ora?
+        </h3>
+        <ol class="space-y-3 text-sm text-blue-800">
+          <li class="flex gap-3">
+            <span class="font-bold">1.</span>
+            <span>Completa il <strong>pagamento</strong> nella finestra che si è aperta</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-bold">2.</span>
+            <span>Riceverai una <strong>email di conferma</strong> entro pochi minuti</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-bold">3.</span>
+            <span>Ti <strong>contatteremo</strong> quando il tuo ordine sarà pronto</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-bold">4.</span>
+            <span>Riceverai la tua felpa entro <strong>3 settimane</strong></span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Bottoni -->
+      <div class="flex flex-col gap-3">
+        <a href="index.html" class="w-full bg-black text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition">
+          🏠 Torna alla Homepage
+        </a>
+        <button onclick="window.print()" class="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition">
+          🖨️ Stampa Riepilogo
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Footer Info -->
+    <div class="text-center mt-8 text-sm text-gray-500">
+      <p class="mb-2">Hai domande? Contattaci a <a href="mailto:info@classeveneta.com" class="text-blue-600 hover:underline">info@classeveneta.com</a></p>
+      <p>© 2024 CLASSE VENETA - Tutti i diritti riservati</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Carica info ordine da sessionStorage
+    const orderData = JSON.parse(sessionStorage.getItem('lastOrder') || '{}');
+    
+    if (orderData.uniqueCode) {
+      document.getElementById('order-code').textContent = orderData.uniqueCode;
+      document.getElementById('order-amount').textContent = `€${orderData.total.toFixed(2)}`;
+    } else {
+      // Se nessun ordine trovato, redirect a home
+      window.location.href = 'index.html';
+    }
+
+    // 🆕 Impedisci il back button
+    window.history.pushState(null, '', window.location.href);
+    window.onpopstate = function() {
+      window.history.pushState(null, '', window.location.href);
+      alert('⚠️ Non puoi tornare indietro. Clicca "Torna alla Homepage" per continuare lo shopping.');
+    };
+
+    // Pulisci sessionStorage dopo 10 minuti (per sicurezza)
+    setTimeout(() => {
+      sessionStorage.removeItem('lastOrder');
+    }, 10 * 60 * 1000);
+  </script>
+
+</body>
+</html>
