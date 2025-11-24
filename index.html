@@ -300,7 +300,7 @@
             <div id="checkout-items" class="bg-gray-50 rounded-lg p-3 md:p-4 space-y-2"></div>
             
             <!-- Promo Code Input -->
-            <div class="mt-4">
+            <div id="promo-code-section" class="mt-4">  
               <label class="block text-sm font-medium mb-2">Hai un codice promozionale?</label>
               <div class="flex gap-2">
                 <input 
@@ -477,6 +477,9 @@
         const data = await res.json();
         products = data.products;
         bundleDiscount = data.bundleDiscount;
+        window.storeConfig = {  // 🆕 Salva config globale
+          promoCodesVisible: data.promoCodesVisible
+        };
         loadAttempts = 0;
         renderProducts();
         
@@ -780,7 +783,17 @@
       
       renderCheckoutItems();
       updateCheckoutTotals();
-    }
+      
+      // 🆕 Mostra/nascondi campo promo in base al flag
+      const promoSection = document.getElementById('promo-code-section');
+      if (promoSection) {
+        if (window.storeConfig?.promoCodesVisible === false) {
+          promoSection.style.display = 'none';
+        } else {
+          promoSection.style.display = 'block';
+        }
+  }
+}
 
     function closeCheckout() {
       document.getElementById('checkout-modal').classList.add('hidden');
