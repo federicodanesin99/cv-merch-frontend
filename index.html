@@ -4,25 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLASSE VENETA Merch - Pre-Order</title>
-  <!-- 1. Favicon Standard (PC/Browser moderni) -->
-  <!-- Utilizza la tua immagine logo.png originale, ridimensionata a 32x32px -->
   <link rel="icon" href="/logo.png" type="image/png" sizes="32x32">
-
-  <!-- 2. Apple Touch Icon (Mobile iOS - iPhone, iPad) -->
-  <!-- Utilizza una versione della tua immagine logo.png, ridimensionata a 180x180px -->
   <link rel="apple-touch-icon" href="/logo.png" sizes="180x180">
-  
-  <!-- 3. Icona per altre piattaforme e PWA (Android/Generale) -->
-  <!-- Utilizza una versione 192x192px o 512x512px -->
   <link rel="icon" href="/logo.png" sizes="192x192" type="image/png">
-  
-  <!-- 4. Colore della barra degli indirizzi (Android Chrome) -->
-  <!-- Sostituisci #FFFFFF con il colore principale del tuo logo o del tuo sito -->
   <meta name="theme-color" content="#FFFFFF">
-
-  <!-- (Opzionale) File Manifest per PWA -->
-  <!-- Richiede la creazione di un file 'site.webmanifest' dedicato -->
-  <!-- <link rel="manifest" href="/site.webmanifest"> -->
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -32,6 +17,7 @@
       font-family: 'Inter', sans-serif;
       -webkit-tap-highlight-color: transparent;
       padding-bottom: 80px;
+      padding-top: 0;
     }
     
     .product-card {
@@ -99,17 +85,21 @@
     }
 
     @media (max-width: 768px) {
-    .image-carousel img {
-      aspect-ratio: 3 / 4; /* Verticale: 3:4 ratio */
-      object-fit: contain; /* 🆕 Mostra tutta la felpa */
-      background-color: #f3f4f6; /* Sfondo grigio chiaro per le bande */
+      .image-carousel img {
+        aspect-ratio: 3 / 4;
+        object-fit: contain;
+        background-color: #f3f4f6;
+      }
+      
+      .carousel-container {
+        background: #f3f4f6;
+      }
+      
+      .color-swatch {
+        width: 36px;
+        height: 36px;
+      }
     }
-    
-    .carousel-container {
-      background: #f3f4f6; /* Match con lo sfondo */
-    }
-  }
-    
     
     .cart-footer {
       transition: all 0.3s ease;
@@ -119,32 +109,13 @@
       transform: translateY(100%);
     }
     
-    .strikethrough-price {
-      position: relative;
-    }
-    
-    .strikethrough-price::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 50%;
-      border-top: 2px solid currentColor;
-    }
-    
-    @media (max-width: 768px) {
-      .color-swatch {
-        width: 36px;
-        height: 36px;
-      }
-    }
     .carousel-container {
-  position: relative;
-  background: #f9fafb; /* Sfondo per desktop */
-}
+      position: relative;
+      background: #f9fafb;
+    }
 
     .carousel-container img {
-      object-fit: contain; /* 🆕 Mostra tutta la felpa anche su desktop */
+      object-fit: contain;
       background-color: #f9fafb;
     }
 
@@ -213,948 +184,960 @@
 </head>
 <body class="bg-gray-50">
 
-  <!-- Header -->
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
-      <div class="flex items-center space-x-2 md:space-x-3">
-        <img src="logo.png" 
-     alt="Logo" 
-     class="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover" />
-        <div>
-          <h1 class="text-base md:text-xl font-bold">CLASSE VENETA</h1>
-          <p class="text-xs text-gray-500 hidden md:block">Merchandise Store</p>
-        </div>
+<!-- Countdown Banner -->
+<div id="countdown-banner" class="bg-gradient-to-r from-red-600 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
+  <div class="max-w-6xl mx-auto px-4 py-3">
+    <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+      <div class="flex items-center gap-2 text-sm md:text-base font-semibold">
+        <span class="text-xl md:text-2xl animate-pulse">🔥</span>
+        <span class="hidden md:inline">OFFERTA LANCIO TERMINA TRA:</span>
+        <span class="md:hidden">TERMINA TRA:</span>
       </div>
-      <button id="cart-icon" onclick="toggleCart()" class="relative cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-        </svg>
-        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Hero Banner -->
-  <section class="bg-gradient-to-r from-gray-900 to-gray-700 text-white py-8 md:py-16">
-    <div class="max-w-6xl mx-auto px-4 text-center">
-      <h2 class="text-2xl md:text-5xl font-bold mb-2 md:mb-4">Pre-Order Esclusivo</h2>
-      <p class="text-lg md:text-xl mb-1 md:mb-2">
-        Prezzi di lancio fino a <span class="text-yellow-400 font-bold">-20%</span>
-      </p>
-      <p class="text md:text mb-1 md:mb-2">
-        Disponibili per 1 settimana
-      </p>
-      <p class="text-sm md:text-base text-gray-300">Ordina ora, ricevi entro 3 settimane</p>
-    </div>
-  </section>
-
-  <!-- Products -->
-  <section class="max-w-6xl mx-auto px-4 py-6 md:py-12">
-    <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-      <!-- Prodotti caricati dinamicamente -->
-    </div>
-  </section>
-
-  <!-- Size Guide Modal -->
-  <div id="size-guide-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-md w-full p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold">Guida alle Taglie</h3>
-        <button onclick="closeSizeGuide()" class="text-gray-400 hover:text-gray-600 text-2xl">✕</button>
-      </div>
-      <div id="size-guide-content" class="text-sm text-gray-700"></div>
-    </div>
-  </div>
-
-  <!-- Cart Summary Footer (Minimizzabile) -->
-  <div id="cart-summary" class="cart-footer hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-40">
-    <div class="max-w-6xl mx-auto px-4 py-3 md:py-4">
-      <!-- Toggle Button -->
-      <button onclick="toggleCartMinimize()" class="absolute -top-8 right-4 bg-black text-white px-3 py-1 rounded-t-lg text-xs font-semibold hover:bg-gray-800 transition">
-        <span id="cart-toggle-icon">▼</span>
-      </button>
-
-      <div id="cart-content">
-        <div class="flex flex-col gap-3">
-          <!-- Cart Items List -->
-          <div id="cart-items-list" class="max-h-40 overflow-y-auto space-y-2"></div>
-
-          <!-- Totals -->
-          <div class="border-t pt-3 space-y-1">
-            <div class="flex justify-between text-sm">
-              <span>Subtotale</span>
-              <span id="cart-subtotal">€0.00</span>
-            </div>
-            <div id="bundle-discount-row" class="hidden flex justify-between text-sm text-green-600">
-              <span id="bundle-discount-text"></span>
-              <span id="bundle-discount-amount"></span>
-            </div>
-            <div id="promo-discount-row" class="hidden flex justify-between text-sm text-green-600">
-              <span id="promo-discount-text"></span>
-              <span id="promo-discount-amount"></span>
-            </div>
-            <div class="flex justify-between text-xl font-bold pt-2 border-t">
-              <span>Totale</span>
-              <span id="cart-total">€0.00</span>
-            </div>
+      
+      <div class="flex gap-2 md:gap-3">
+        <div class="flex flex-col items-center">
+          <div id="countdown-days" class="bg-white text-red-600 font-bold text-xl md:text-3xl px-3 md:px-4 py-2 md:py-3 rounded-lg min-w-[50px] md:min-w-[70px] text-center shadow-lg">
+            00
           </div>
-
-          <button onclick="openCheckout()" class="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition w-full text-sm md:text-base">
-            Procedi al Checkout
-          </button>
+          <span class="text-xs mt-1 font-medium">giorni</span>
+        </div>
+        
+        <div class="flex flex-col items-center">
+          <div id="countdown-hours" class="bg-white text-red-600 font-bold text-xl md:text-3xl px-3 md:px-4 py-2 md:py-3 rounded-lg min-w-[50px] md:min-w-[70px] text-center shadow-lg">
+            00
+          </div>
+          <span class="text-xs mt-1 font-medium">ore</span>
+        </div>
+        
+        <div class="flex flex-col items-center">
+          <div id="countdown-minutes" class="bg-white text-red-600 font-bold text-xl md:text-3xl px-3 md:px-4 py-2 md:py-3 rounded-lg min-w-[50px] md:min-w-[70px] text-center shadow-lg">
+            00
+          </div>
+          <span class="text-xs mt-1 font-medium">min</span>
+        </div>
+        
+        <div class="hidden md:flex flex-col items-center">
+          <div id="countdown-seconds" class="bg-white text-red-600 font-bold text-3xl px-4 py-3 rounded-lg min-w-[70px] text-center shadow-lg">
+            00
+          </div>
+          <span class="text-xs mt-1 font-medium">sec</span>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Checkout Modal -->
-  <div id="checkout-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-lg max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
-      <div class="p-4 md:p-6">
-        <div class="flex justify-between items-center mb-4 md:mb-6">
-          <h3 class="text-xl md:text-2xl font-bold">Completa l'ordine</h3>
-          <button onclick="closeCheckout()" class="text-gray-400 hover:text-gray-600 text-2xl">✕</button>
-        </div>
-
-        <div id="checkout-form">
-          <!-- Cart Items in Checkout -->
-          <div class="mb-4 md:mb-6">
-            <h4 class="font-semibold mb-3 text-sm md:text-base">Il tuo ordine</h4>
-            <div id="checkout-items" class="bg-gray-50 rounded-lg p-3 md:p-4 space-y-2"></div>
-            
-            <!-- Promo Code Input -->
-            <div id="promo-code-section" class="mt-4">  
-              <label class="block text-sm font-medium mb-2">Hai un codice promozionale?</label>
-              <div class="flex gap-2">
-                <input 
-                  type="text" 
-                  id="promo-code-input" 
-                  placeholder="CODICE SCONTO"
-                  class="flex-1 px-3 py-2 border rounded-lg text-sm uppercase"
-                  maxlength="20"
-                >
-                <button 
-                  onclick="applyPromoCode()" 
-                  class="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-semibold hover:bg-black transition">
-                  Applica
-                </button>
-              </div>
-              <p id="promo-message" class="text-xs mt-1 hidden"></p>
-            </div>
-
-            <!-- Totals -->
-            <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between">
-                <span>Subtotale</span>
-                <span id="checkout-subtotal">€0.00</span>
-              </div>
-              <div id="checkout-bundle-row" class="hidden flex justify-between text-green-600">
-                <span id="checkout-bundle-text"></span>
-                <span id="checkout-bundle-amount"></span>
-              </div>
-              <div id="checkout-promo-row" class="hidden flex justify-between text-green-600">
-                <span id="checkout-promo-text"></span>
-                <span id="checkout-promo-amount"></span>
-              </div>
-              <div class="flex justify-between text-base md:text-lg font-bold pt-2 border-t">
-                <span>Totale</span>
-                <span id="checkout-total">€0.00</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Customer Data -->
-          <div class="mb-4 md:mb-6 space-y-3">
-            <h4 class="font-semibold text-sm md:text-base">I tuoi dati</h4>
-            <div class="grid grid-cols-2 gap-3">
-              <input 
-                type="text" 
-                id="customer-firstname" 
-                required 
-                placeholder="Nome *" 
-                class="px-3 py-2 border rounded-lg text-sm">
-              <input 
-                type="text" 
-                id="customer-lastname" 
-                required 
-                placeholder="Cognome *" 
-                class="px-3 py-2 border rounded-lg text-sm">
-            </div>
-            <input 
-              type="email" 
-              id="customer-email" 
-              required 
-              placeholder="Email *" 
-              class="w-full px-3 py-2 border rounded-lg text-sm">
-            <div>
-              <input 
-                type="tel" 
-                id="customer-phone" 
-                required 
-                placeholder="Telefono *" 
-                class="w-full px-3 py-2 border rounded-lg text-sm">
-              <p class="text-xs text-gray-500 mt-1">📞 Ti contatteremo quando la tua felpa sarà pronta!</p>
-            </div>
-          </div>
-
-          <!-- Payment Method -->
-          <div class="mb-4 md:mb-6">
-            <h4 class="font-semibold mb-3 text-sm md:text-base">Metodo di pagamento</h4>
-            <div class="grid grid-cols-2 gap-3 md:gap-4">
-              <label class="border-2 border-gray-200 rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-500 transition">
-                <input type="radio" name="payment" value="paypal" checked class="mr-2">
-                <span class="font-semibold text-sm md:text-base">PayPal</span>
-              </label>
-              <label class="border-2 border-gray-200 rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-500 transition">
-                <input type="radio" name="payment" value="revolut" class="mr-2">
-                <span class="font-semibold text-sm md:text-base">Revolut</span>
-              </label>
-            </div>
-          </div>
-
-          <button onclick="handleCheckout()" class="w-full bg-black text-white py-3 md:py-4 rounded-lg font-semibold text-sm md:text-lg hover:bg-gray-800 transition">
-            Conferma e vai al pagamento
-          </button>
-        </div>
+<!-- Header -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-2 md:space-x-3">
+      <img src="logo.png" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover" />
+      <div>
+        <h1 class="text-base md:text-xl font-bold">CLASSE VENETA</h1>
+        <p class="text-xs text-gray-500 hidden md:block">Merchandise Store</p>
       </div>
     </div>
+    <button id="cart-icon" onclick="toggleCart()" class="relative cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+      </svg>
+      <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+    </button>
   </div>
+</header>
 
-  <script>
-    const API_URL = window.location.hostname === 'localhost' 
-      ? 'http://localhost:3000'
-      : 'https://cv-merch-backend.onrender.com';
-
-    let products = [];
-    let cart = [];
-    let bundleDiscount = 5;
-    let selectedColors = {};
-    let selectedSizes = {};
-    let loadAttempts = 0;
-    let appliedPromo = null;
-    let cartMinimized = false;
-    const MAX_RETRIES = 3;
-
-    const colorMap = {
-      //verde
-      'Military Green': '#4a5d4f',
-      'Military Tilla': '#4a5d4f',
-      //----blue 
-      'Blue Navy' : '#1e3a5f',
-      'Blue Nesio' : '#1e3a5f',
-      //----grigio
-      'Dark Heather': '#3c3c3c',
-      'Grey Smokerz': '#3c3c3c',
-      //----rosso 
-      'Maroon': '#800020',
-      'Red Panzer': '#800020',
-      //----marrone
-      'Dark Chocolate': '#3d2b1f',
-      'Chocolate Carma': '#3d2b1f',
-      'Black': '#000000',
-      'White': '#ffffff',
-      'Grey': '#808080',
-      'Red': '#dc2626',
-      'Blue': '#2563eb'
-    };
-
-    async function prewarmBackend() {
-      try {
-        console.log('🔥 Pre-warming backend...');
-        await fetch(`${API_URL}/health`, { 
-          method: 'GET',
-          signal: AbortSignal.timeout(5000)
-        });
-        console.log('✅ Backend warm!');
-      } catch (err) {
-        console.log('⚠️ Prewarm failed, backend might be sleeping');
-      }
-    }
-
-    async function loadProducts(isRetry = false) {
-      loadAttempts++;
-      const container = document.getElementById('products-container');
-      
-      if (!isRetry) {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12">
-            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto mb-4"></div>
-            <p class="text-gray-600 font-semibold mb-2">Caricamento prodotti...</p>
-            <p class="text-sm text-gray-400">
-              ${loadAttempts > 1 ? `Tentativo ${loadAttempts}/${MAX_RETRIES}` : 'Attendi qualche secondo'}
-            </p>
-          </div>
-        `;
-      }
-
-      try {
-        const timeout = loadAttempts === 1 ? 30000 : 15000;
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
-        
-        const res = await fetch(`${API_URL}/api/products`, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
-        const data = await res.json();
-        products = data.products;
-        bundleDiscount = data.bundleDiscount;
-        window.storeConfig = {  // 🆕 Salva config globale
-          promoCodesVisible: data.promoCodesVisible
-        };
-        loadAttempts = 0;
-        renderProducts();
-        
-      } catch (err) {
-        console.error('❌ Error loading products:', err);
-        
-        if (loadAttempts < MAX_RETRIES) {
-          setTimeout(() => loadProducts(true), 3000);
-        } else {
-          container.innerHTML = `
-            <div class="col-span-full text-center py-12 bg-white rounded-lg shadow-lg p-8">
-              <div class="text-6xl mb-4">😕</div>
-              <p class="text-red-600 font-bold text-xl mb-2">Impossibile caricare i prodotti</p>
-              <button onclick="location.reload()" class="mt-4 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-semibold">
-                🔄 Ricarica la pagina
-              </button>
-            </div>
-          `;
-        }
-      }
-    }
-
-    function renderProducts() {
-      const container = document.getElementById('products-container');
-      
-      if (products.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-white rounded-lg shadow">
-            <p class="text-gray-500 text-lg">Nessun prodotto disponibile</p>
-          </div>
-        `;
-        return;
-      }
-      
-      container.innerHTML = products.map(product => {
-        if (!selectedColors[product.id]) selectedColors[product.id] = product.colors[0];
-        if (!selectedSizes[product.id]) selectedSizes[product.id] = product.sizes[0];
-        
-        const currentColor = selectedColors[product.id];
-        const currentImages = getImagesForColor(product, currentColor);
-        
-        // 🆕 Determina se mostrare prezzo barrato
-        // product.price è già il prezzo corretto (lancio o base) settato dal backend
-        // Dobbiamo mostrare basePrice barrato se esiste launchPrice e launch_prices_active
-        const showOriginalPrice = product.basePrice && product.price < product.basePrice;
-        
-        return `
-          <div class="product-card bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="carousel-container relative bg-gray-100">
-              ${currentImages.length > 0 
-                ? `
-                  <div class="image-carousel flex overflow-x-auto snap-x" id="carousel-${product.id}">
-                    ${currentImages.map((url, idx) => `
-                      <img 
-                        src="${url}" 
-                        alt="${product.name}" 
-                        class="w-full h-64 md:h-80 object-cover flex-shrink-0 snap-center cursor-pointer"
-                        onclick="openImageZoom('${url}')"
-                      >
-                    `).join('')}
-                  </div>
-                  ${currentImages.length > 1 ? `
-                    <button class="carousel-btn left" onclick="scrollCarousel('${product.id}', -1)">
-                      &#8249;
-                    </button>
-                    <button class="carousel-btn right" onclick="scrollCarousel('${product.id}', 1)">
-                      &#8250;
-                    </button>
-                  ` : ''}
-                `
-                : `<div class="bg-gray-200 h-64 md:h-80 flex items-center justify-center"><span class="text-gray-400 text-6xl">📦</span></div>`}
-              
-              <div class="absolute top-3 left-3 bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-                ${currentColor}
-              </div>
-              
-              ${showOriginalPrice ? `
-                <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                  -${Math.round(product.basePrice - product.price)}€
-                </div>
-              ` : ''}
-            </div>
-            
-            <div class="p-4 md:p-6">
-              <h3 class="text-lg md:text-xl font-bold mb-1">${product.name}</h3>
-              ${product.description ? `<p class="text-sm text-gray-600 mb-3">${product.description}</p>` : ''}
-              
-              <div class="flex items-center gap-3 mb-4">
-                ${showOriginalPrice ? `
-                  <p class="text-lg text-gray-400 line-through">€${product.basePrice.toFixed(2)}</p>
-                  <p class="text-2xl md:text-3xl font-bold text-red-600">€${product.price.toFixed(2)}</p>
-                ` : `
-                  <p class="text-2xl md:text-3xl font-bold text-gray-900">€${product.price.toFixed(2)}</p>
-                `}
-              </div>
-              
-              <div class="mb-4">
-                <label class="block text-xs md:text-sm font-semibold mb-3">Colore</label>
-                <div class="flex gap-2 flex-wrap pb-6">
-                  ${product.colors.map((color) => `
-                    <div class="color-swatch ${color === currentColor ? 'selected' : ''}" 
-                         style="background-color: ${getColorHex(color)}"
-                         onclick="selectColor('${product.id}', '${color}')"
-                         data-color="${color}">
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                  <label class="text-xs md:text-sm font-semibold">Taglia</label>
-                  ${product.sizeGuide ? `
-                    <button onclick="showSizeGuide(\`${product.sizeGuide.replace(/`/g, '\\`')}\`)" class="text-xs text-blue-600 hover:underline">
-                      📏 Guida taglie
-                    </button>
-                  ` : ''}
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                  ${product.sizes.map((size) => `
-                    <button class="size-btn px-3 md:px-4 py-2 border rounded ${size === selectedSizes[product.id] ? 'selected' : ''}"
-                            onclick="selectSize('${product.id}', '${size}')">
-                      ${size}
-                    </button>
-                  `).join('')}
-                </div>
-              </div>
-
-              <div class="flex items-center gap-3 md:gap-4">
-                <input type="number" id="qty-${product.id}" value="1" min="1" max="10" 
-                       class="w-16 md:w-20 px-2 py-2 border rounded text-center text-sm">
-                <button onclick="addToCart('${product.id}')" 
-                        class="flex-1 bg-black text-white py-2 md:py-3 rounded font-semibold hover:bg-gray-800 transition text-sm md:text-base">
-                  Aggiungi al carrello
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function getColorHex(colorName) {
-      return colorMap[colorName] || '#666666';
-    }
-
-    function getImagesForColor(product, color) {
-      if (!product.images || product.images.length === 0) return [];
-      const colorImages = product.images.find(img => img.color === color);
-      return colorImages ? colorImages.urls : [];
-    }
-
-    function selectColor(productId, color) {
-      selectedColors[productId] = color;
-      renderProducts();
-    }
-
-    function selectSize(productId, size) {
-      selectedSizes[productId] = size;
-      renderProducts();
-    }
-
-    function showSizeGuide(guide) {
-      document.getElementById('size-guide-content').innerHTML = guide.replace(/\n/g, '<br>');
-      document.getElementById('size-guide-modal').classList.remove('hidden');
-    }
-
-    function closeSizeGuide() {
-      document.getElementById('size-guide-modal').classList.add('hidden');
-    }
-
-    function addToCart(productId) {
-      const product = products.find(p => p.id === productId);
-      const color = selectedColors[productId] || product.colors[0];
-      const size = selectedSizes[productId] || product.sizes[0];
-      const qty = parseInt(document.getElementById(`qty-${productId}`).value);
-
-      cart.push({ product, color, size, quantity: qty });
-      updateCart();
-      
-      const btn = event.target;
-      const originalText = btn.textContent;
-      btn.textContent = '✓ Aggiunto!';
-      btn.classList.add('bg-green-600');
-      btn.classList.remove('bg-black');
-      
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.classList.remove('bg-green-600');
-        btn.classList.add('bg-black');
-      }, 1500);
-    }
-
-    function removeFromCart(index) {
-      if (confirm('Rimuovere questo articolo dal carrello?')) {
-        cart.splice(index, 1);
-        appliedPromo = null; // Reset promo
-        updateCart();
-      }
-    }
-
-    function updateCart() {
-      const summary = document.getElementById('cart-summary');
-      const count = document.getElementById('cart-count');
-      
-      if (cart.length === 0) {
-        summary.classList.add('hidden');
-        count.classList.add('hidden');
-        return;
-      }
-
-      summary.classList.remove('hidden');
-      count.classList.remove('hidden');
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      count.textContent = totalItems;
-
-      // Calculate totals
-      let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-      
-      // Bundle discount
-      const sizeCounts = {};
-      cart.forEach(item => {
-        sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
-      });
-      const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
-      const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
-      
-      // After bundle
-      const afterBundle = subtotal - bundleDiscountAmount;
-      
-      // Promo discount (applied to after-bundle total)
-      const promoDiscountAmount = appliedPromo ? appliedPromo.discount : 0;
-      
-      const total = afterBundle - promoDiscountAmount;
-
-      // Update footer
-      renderCartItems();
-      document.getElementById('cart-subtotal').textContent = `€${subtotal.toFixed(2)}`;
-      document.getElementById('cart-total').textContent = `€${total.toFixed(2)}`;
-      
-      if (bundleDiscountAmount > 0) {
-        document.getElementById('bundle-discount-row').classList.remove('hidden');
-        document.getElementById('bundle-discount-text').textContent = `Sconto Bundle ${bundleDiscount}%`;
-        document.getElementById('bundle-discount-amount').textContent = `-€${bundleDiscountAmount.toFixed(2)}`;
-      } else {
-        document.getElementById('bundle-discount-row').classList.add('hidden');
-      }
-      
-      if (promoDiscountAmount > 0) {
-        document.getElementById('promo-discount-row').classList.remove('hidden');
-        document.getElementById('promo-discount-text').textContent = `Codice ${appliedPromo.code}`;
-        document.getElementById('promo-discount-amount').textContent = `-€${promoDiscountAmount.toFixed(2)}`;
-      } else {
-        document.getElementById('promo-discount-row').classList.add('hidden');
-      }
-    }
-
-    function renderCartItems() {
-      const container = document.getElementById('cart-items-list');
-      container.innerHTML = cart.map((item, index) => `
-        <div class="flex justify-between items-center text-sm bg-gray-50 p-2 rounded">
-          <span class="flex-1">${item.quantity}x ${item.product.name} - ${item.color} (${item.size})</span>
-          <span class="font-medium mr-2">€${(item.product.price * item.quantity).toFixed(2)}</span>
-          <button onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800 font-bold">✕</button>
-        </div>
-      `).join('');
-    }
-
-    function toggleCart() {
-      const summary = document.getElementById('cart-summary');
-      if (cart.length > 0) {
-        if (cartMinimized) {
-          cartMinimized = false;
-          summary.classList.remove('minimized');
-          document.getElementById('cart-toggle-icon').textContent = '▼';
-        } else {
-          openCheckout();
-        }
-      }
-    }
-
-    function toggleCartMinimize() {
-      const summary = document.getElementById('cart-summary');
-      cartMinimized = !cartMinimized;
-      
-      if (cartMinimized) {
-        summary.classList.add('minimized');
-        document.getElementById('cart-toggle-icon').textContent = '▲';
-      } else {
-        summary.classList.remove('minimized');
-        document.getElementById('cart-toggle-icon').textContent = '▼';
-      }
-    }
-
-    function openCheckout() {
-      if (cart.length === 0) return;
-      
-      const modal = document.getElementById('checkout-modal');
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      
-      renderCheckoutItems();
-      updateCheckoutTotals();
-      
-      // 🆕 Mostra/nascondi campo promo in base al flag
-      const promoSection = document.getElementById('promo-code-section');
-      if (promoSection) {
-        if (window.storeConfig?.promoCodesVisible === false) {
-          promoSection.style.display = 'none';
-        } else {
-          promoSection.style.display = 'block';
-        }
-  }
-}
-
-    function closeCheckout() {
-      document.getElementById('checkout-modal').classList.add('hidden');
-      document.body.style.overflow = 'auto';
-    }
-
-    function renderCheckoutItems() {
-      const container = document.getElementById('checkout-items');
-      container.innerHTML = cart.map((item, index) => `
-        <div class="flex justify-between items-center text-sm">
-          <span class="flex-1">${item.quantity}x ${item.product.name} - ${item.color} (${item.size})</span>
-          <span class="font-medium mr-2">€${(item.product.price * item.quantity).toFixed(2)}</span>
-          <button onclick="removeFromCartCheckout(${index})" class="text-red-600 hover:text-red-800 font-bold">✕</button>
-        </div>
-      `).join('');
-    }
-
-    function removeFromCartCheckout(index) {
-      if (confirm('Rimuovere questo articolo?')) {
-        cart.splice(index, 1);
-        appliedPromo = null;
-        document.getElementById('promo-code-input').value = '';
-        document.getElementById('promo-message').classList.add('hidden');
-        
-        if (cart.length === 0) {
-          closeCheckout();
-          updateCart();
-        } else {
-          renderCheckoutItems();
-          updateCheckoutTotals();
-          updateCart();
-        }
-      }
-    }
-
-    function updateCheckoutTotals() {
-      let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-      
-      const sizeCounts = {};
-      cart.forEach(item => {
-        sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
-      });
-      const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
-      const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
-      
-      const afterBundle = subtotal - bundleDiscountAmount;
-      const promoDiscountAmount = appliedPromo ? appliedPromo.discount : 0;
-      const total = afterBundle - promoDiscountAmount;
-
-      document.getElementById('checkout-subtotal').textContent = `€${subtotal.toFixed(2)}`;
-      document.getElementById('checkout-total').textContent = `€${total.toFixed(2)}`;
-      
-      if (bundleDiscountAmount > 0) {
-        document.getElementById('checkout-bundle-row').classList.remove('hidden');
-        document.getElementById('checkout-bundle-text').textContent = `Sconto Bundle ${bundleDiscount}%`;
-        document.getElementById('checkout-bundle-amount').textContent = `-€${bundleDiscountAmount.toFixed(2)}`;
-      } else {
-        document.getElementById('checkout-bundle-row').classList.add('hidden');
-      }
-      
-      if (promoDiscountAmount > 0) {
-        document.getElementById('checkout-promo-row').classList.remove('hidden');
-        document.getElementById('checkout-promo-text').textContent = `Codice ${appliedPromo.code}`;
-        document.getElementById('checkout-promo-amount').textContent = `-€${promoDiscountAmount.toFixed(2)}`;
-      } else {
-        document.getElementById('checkout-promo-row').classList.add('hidden');
-      }
-    }
-
-    async function applyPromoCode() {
-      const input = document.getElementById('promo-code-input');
-      const code = input.value.trim().toUpperCase();
-      const message = document.getElementById('promo-message');
-      
-      if (!code) {
-        message.textContent = 'Inserisci un codice';
-        message.className = 'text-xs mt-1 text-red-600';
-        message.classList.remove('hidden');
-        return;
-      }
-
-      const email = document.getElementById('customer-email').value;
-      if (!email) {
-        message.textContent = 'Inserisci prima la tua email';
-        message.className = 'text-xs mt-1 text-red-600';
-        message.classList.remove('hidden');
-        return;
-      }
-
-      let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-      const sizeCounts = {};
-      cart.forEach(item => {
-        sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
-      });
-      const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
-      const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
-      const afterBundle = subtotal - bundleDiscountAmount;
-
-      try {
-        const res = await fetch(`${API_URL}/api/validate-promo`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, customerEmail: email, subtotal: afterBundle })
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.valid) {
-          appliedPromo = data;
-          message.textContent = data.message;
-          message.className = 'text-xs mt-1 text-green-600';
-          message.classList.remove('hidden');
-          updateCheckoutTotals();
-          updateCart();
-        } else {
-          message.textContent = data.error || 'Codice non valido';
-          message.className = 'text-xs mt-1 text-red-600';
-          message.classList.remove('hidden');
-          appliedPromo = null;
-        }
-      } catch (err) {
-        message.textContent = 'Errore nella validazione';
-        message.className = 'text-xs mt-1 text-red-600';
-        message.classList.remove('hidden');
-      }
-    }
-
-    async function handleCheckout() {
-      const firstname = document.getElementById('customer-firstname').value.trim();
-      const lastname = document.getElementById('customer-lastname').value.trim();
-      const email = document.getElementById('customer-email').value.trim();
-      const phone = document.getElementById('customer-phone').value.trim();
-      const payment = document.querySelector('input[name="payment"]:checked').value;
-
-      if (!firstname || !lastname || !email || !phone) {
-        alert('Compila tutti i campi obbligatori');
-        return;
-      }
-
-      const fullName = `${firstname} ${lastname}`;
-      
-      const orderData = {
-        customerEmail: email,
-        customerName: fullName,
-        customerPhone: phone,
-        paymentMethod: payment,
-        promoCode: appliedPromo ? appliedPromo.code : null,
-        items: cart.map(item => ({
-          productId: item.product.id,
-          color: item.color,
-          size: item.size,
-          quantity: item.quantity
-        }))
-      };
-
-      try {
-        const res = await fetch(`${API_URL}/api/orders`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-
-        const data = await res.json();
-        
-        if (res.ok) {
-          window.pendingPayment = {
-          url: data.paymentUrl,
-          uniqueCode: data.uniqueCode
-          };
-            // Chiudi checkout e mostra modal codice
-          closeCheckout();
-          showUniqueCodeModal(data.uniqueCode, data.total);
-        } else {
-          alert(data.error || 'Errore durante la creazione dell\'ordine');
-        }
-        
-      } catch (err) {
-        alert('Errore durante la creazione dell\'ordine. Riprova.');
-        console.error(err);
-      }
-    }
-
-    document.getElementById('checkout-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'checkout-modal') {
-        closeCheckout();
-      }
-    });
-
-    document.getElementById('size-guide-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'size-guide-modal') {
-        closeSizeGuide();
-      }
-    });
-
-    function scrollCarousel(productId, direction) {
-      const carousel = document.getElementById(`carousel-${productId}`);
-      const scrollAmount = carousel.clientWidth;
-      carousel.scrollBy({
-        left: direction * scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-
-    function openImageZoom(url) {
-      document.getElementById('zoom-image').src = url;
-      document.getElementById('zoom-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeImageZoom() {
-      document.getElementById('zoom-modal').classList.add('hidden');
-      document.body.style.overflow = 'auto';
-    }
-
-    // 🆕 Gestione Modal Codice Univoco
-    function showUniqueCodeModal(code, total) {
-      document.getElementById('unique-code-display').textContent = code;
-      document.getElementById('order-total-display').textContent = `€${total.toFixed(2)}`; 
-      document.getElementById('unique-code-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function copyUniqueCode() {
-      const code = document.getElementById('unique-code-display').textContent;
-      
-      navigator.clipboard.writeText(code).then(() => {
-        // Feedback visivo
-        document.getElementById('copy-icon').textContent = '✅';
-        document.getElementById('copy-text').textContent = 'Copiato!';
-        
-        setTimeout(() => {
-          document.getElementById('copy-icon').textContent = '📋';
-          document.getElementById('copy-text').textContent = 'Copia Codice';
-        }, 2000);
-      }).catch(err => {
-        alert('Errore nella copia. Seleziona e copia manualmente.');
-      });
-    }
-
-    function proceedToPayment() {
-  if (window.pendingPayment && window.pendingPayment.url) {
-    // 🆕 Salva dati ordine per pagina grazie
-    sessionStorage.setItem('lastOrder', JSON.stringify({
-      uniqueCode: window.pendingPayment.uniqueCode,
-      total: window.pendingPayment.total,
-      timestamp: Date.now()
-    }));
-    
-    // 🆕 Svuota carrello
-    cart = [];
-    appliedPromo = null;
-    updateCart();
-    
-    // 🆕 Apri pagamento in nuova finestra
-    window.open(window.pendingPayment.url, '_blank');
-    
-    // 🆕 Reindirizza a pagina grazie
-    window.location.href = 'grazie.html';
-  }
-}
-
-    (async function init() {
-      await prewarmBackend();
-      await loadProducts();
-    })();
-  </script>
-
-  <!-- Zoom Modal -->
-  <div id="zoom-modal" class="zoom-modal hidden" onclick="closeImageZoom()">
-    <button class="zoom-close" onclick="closeImageZoom()">✕</button>
-    <img id="zoom-image" src="" alt="Zoom">
+<!-- Hero Banner -->
+<section class="bg-gradient-to-r from-gray-900 to-gray-700 text-white py-8 md:py-16">
+  <div class="max-w-6xl mx-auto px-4 text-center">
+    <h2 class="text-2xl md:text-5xl font-bold mb-2 md:mb-4">Pre-Order Esclusivo</h2>
+    <p class="text-lg md:text-xl mb-1 md:mb-2">
+      Prezzi di lancio fino a <span class="text-yellow-400 font-bold">-20%</span>
+    </p>
+    <p class="text md:text mb-1 md:mb-2">
+      Disponibili per 1 settimana
+    </p>
+    <p class="text-sm md:text-base text-gray-300">Ordina ora, ricevi entro 3 settimane</p>
   </div>
+</section>
 
-  <!-- 🆕 Unique Code Modal -->
-  <div id="unique-code-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-md w-full p-6 text-center">
-      <div class="mb-4">
-        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span class="text-3xl">✅</span>
+<!-- Products -->
+<section class="max-w-6xl mx-auto px-4 py-6 md:py-12">
+  <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+    <!-- Prodotti caricati dinamicamente -->
+  </div>
+</section>
+
+<!-- Size Guide Modal -->
+<div id="size-guide-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg max-w-md w-full p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold">Guida alle Taglie</h3>
+      <button onclick="closeSizeGuide()" class="text-gray-400 hover:text-gray-600 text-2xl">✕</button>
+    </div>
+    <div id="size-guide-content" class="text-sm text-gray-700"></div>
+  </div>
+</div>
+
+<!-- Cart Summary Footer -->
+<div id="cart-summary" class="cart-footer hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 md:py-4">
+    <button onclick="toggleCartMinimize()" class="absolute -top-8 right-4 bg-black text-white px-3 py-1 rounded-t-lg text-xs font-semibold hover:bg-gray-800 transition">
+      <span id="cart-toggle-icon">▼</span>
+    </button>
+
+    <div id="cart-content">
+      <div class="flex flex-col gap-3">
+        <div id="cart-items-list" class="max-h-40 overflow-y-auto space-y-2"></div>
+
+        <div class="border-t pt-3 space-y-1">
+          <div class="flex justify-between text-sm">
+            <span>Subtotale</span>
+            <span id="cart-subtotal">€0.00</span>
+          </div>
+          <div id="bundle-discount-row" class="hidden flex justify-between text-sm text-green-600">
+            <span id="bundle-discount-text"></span>
+            <span id="bundle-discount-amount"></span>
+          </div>
+          <div id="promo-discount-row" class="hidden flex justify-between text-sm text-green-600">
+            <span id="promo-discount-text"></span>
+            <span id="promo-discount-amount"></span>
+          </div>
+          <div class="flex justify-between text-xl font-bold pt-2 border-t">
+            <span>Totale</span>
+            <span id="cart-total">€0.00</span>
+          </div>
         </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-2">Ordine Confermato!</h3>
-        <p class="text-sm text-gray-600 mb-4">
-          Ecco il tuo codice ordine univoco:
-        </p>
-      </div>
 
-      <div class="bg-gray-100 rounded-lg p-4 mb-4">
-        <p class="text-xs text-gray-500 mb-2">CODICE ORDINE</p>
-        <p id="unique-code-display" class="text-2xl md:text-3xl font-bold font-mono tracking-wider mb-3">
-          CLASSEVE-0001-XXXX
-        </p>
-        <button 
-          onclick="copyUniqueCode()" 
-          class="w-full bg-black text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-800 transition flex items-center justify-center gap-2">
-          <span id="copy-icon">📋</span>
-          <span id="copy-text">Copia Codice</span>
+        <button onclick="openCheckout()" class="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition w-full text-sm md:text-base">
+          Procedi al Checkout
         </button>
       </div>
-
-      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-left">
-        <p class="text-xs font-semibold text-yellow-800 mb-1">⚠️ IMPORTANTE</p>
-        <p class="text-xs text-yellow-700">
-          Incolla questo codice nella <strong>causale/descrizione</strong> del pagamento PayPal o Revolut!
-        </p>
-      </div>
-
-      <div class="bg-green-50 border-2 border-green-500 rounded-lg p-4 mb-4">
-        <p class="text-xs font-semibold text-green-800 mb-2">💶 IMPORTO DA PAGARE</p>
-        <p id="order-total-display" class="text-4xl md:text-5xl font-bold text-green-600 mb-2">
-          €0.00
-        </p>
-        <p class="text-xs text-green-700 font-medium">
-          Inserisci <strong>esattamente</strong> questo importo nel pagamento
-        </p>
-      </div>
-      
-
-
-
-      <button 
-        onclick="proceedToPayment()" 
-        class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
-        Vai al Pagamento →
-      </button>
     </div>
   </div>
+</div>
 
-  <script>
-    // Impedisci back dopo checkout
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        // Pagina ripristinata da cache, reset completo
-        cart = [];
-        appliedPromo = null;
+<!-- Checkout Modal -->
+<div id="checkout-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-white rounded-lg max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
+    <div class="p-4 md:p-6">
+      <div class="flex justify-between items-center mb-4 md:mb-6">
+        <h3 class="text-xl md:text-2xl font-bold">Completa l'ordine</h3>
+        <button onclick="closeCheckout()" class="text-gray-400 hover:text-gray-600 text-2xl">✕</button>
+      </div>
+
+      <div id="checkout-form">
+        <div class="mb-4 md:mb-6">
+          <h4 class="font-semibold mb-3 text-sm md:text-base">Il tuo ordine</h4>
+          <div id="checkout-items" class="bg-gray-50 rounded-lg p-3 md:p-4 space-y-2"></div>
+          
+          <div id="promo-code-section" class="mt-4">  
+            <label class="block text-sm font-medium mb-2">Hai un codice promozionale?</label>
+            <div class="flex gap-2">
+              <input 
+                type="text" 
+                id="promo-code-input" 
+                placeholder="CODICE SCONTO"
+                class="flex-1 px-3 py-2 border rounded-lg text-sm uppercase"
+                maxlength="20"
+              >
+              <button 
+                onclick="applyPromoCode()" 
+                class="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-semibold hover:bg-black transition">
+                Applica
+              </button>
+            </div>
+            <p id="promo-message" class="text-xs mt-1 hidden"></p>
+          </div>
+
+          <div class="mt-4 space-y-1 text-sm">
+            <div class="flex justify-between">
+              <span>Subtotale</span>
+              <span id="checkout-subtotal">€0.00</span>
+            </div>
+            <div id="checkout-bundle-row" class="hidden flex justify-between text-green-600">
+              <span id="checkout-bundle-text"></span>
+              <span id="checkout-bundle-amount"></span>
+            </div>
+            <div id="checkout-promo-row" class="hidden flex justify-between text-green-600">
+              <span id="checkout-promo-text"></span>
+              <span id="checkout-promo-amount"></span>
+            </div>
+            <div class="flex justify-between text-base md:text-lg font-bold pt-2 border-t">
+              <span>Totale</span>
+              <span id="checkout-total">€0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4 md:mb-6 space-y-3">
+          <h4 class="font-semibold text-sm md:text-base">I tuoi dati</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <input type="text" id="customer-firstname" required placeholder="Nome *" class="px-3 py-2 border rounded-lg text-sm">
+            <input type="text" id="customer-lastname" required placeholder="Cognome *" class="px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <input type="email" id="customer-email" required placeholder="Email *" class="w-full px-3 py-2 border rounded-lg text-sm">
+          <div>
+            <input type="tel" id="customer-phone" required placeholder="Telefono *" class="w-full px-3 py-2 border rounded-lg text-sm">
+            <p class="text-xs text-gray-500 mt-1">📞 Ti contatteremo quando la tua felpa sarà pronta!</p>
+          </div>
+        </div>
+
+        <div class="mb-4 md:mb-6">
+          <h4 class="font-semibold mb-3 text-sm md:text-base">Metodo di pagamento</h4>
+          <div class="grid grid-cols-2 gap-3 md:gap-4">
+            <label class="border-2 border-gray-200 rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-500 transition">
+              <input type="radio" name="payment" value="paypal" checked class="mr-2">
+              <span class="font-semibold text-sm md:text-base">PayPal</span>
+            </label>
+            <label class="border-2 border-gray-200 rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-500 transition">
+              <input type="radio" name="payment" value="revolut" class="mr-2">
+              <span class="font-semibold text-sm md:text-base">Revolut</span>
+            </label>
+          </div>
+        </div>
+
+        <button onclick="handleCheckout()" class="w-full bg-black text-white py-3 md:py-4 rounded-lg font-semibold text-sm md:text-lg hover:bg-gray-800 transition">
+          Conferma e vai al pagamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Zoom Modal -->
+<div id="zoom-modal" class="zoom-modal hidden" onclick="closeImageZoom()">
+  <button class="zoom-close" onclick="closeImageZoom()">✕</button>
+  <img id="zoom-image" src="" alt="Zoom">
+</div>
+
+<!-- Unique Code Modal -->
+<div id="unique-code-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg max-w-md w-full p-6 text-center">
+    <div class="mb-4">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="text-3xl">✅</span>
+      </div>
+      <h3 class="text-xl md:text-2xl font-bold mb-2">Ordine Confermato!</h3>
+      <p class="text-sm text-gray-600 mb-4">
+        Ecco il tuo codice ordine univoco:
+      </p>
+    </div>
+
+    <div class="bg-gray-100 rounded-lg p-4 mb-4">
+      <p class="text-xs text-gray-500 mb-2">CODICE ORDINE</p>
+      <p id="unique-code-display" class="text-2xl md:text-3xl font-bold font-mono tracking-wider mb-3">
+        CLASSEVE-0001-XXXX
+      </p>
+      <button 
+        onclick="copyUniqueCode()" 
+        class="w-full bg-black text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-800 transition flex items-center justify-center gap-2">
+        <span id="copy-icon">📋</span>
+        <span id="copy-text">Copia Codice</span>
+      </button>
+    </div>
+
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-left">
+      <p class="text-xs font-semibold text-yellow-800 mb-1">⚠️ IMPORTANTE</p>
+      <p class="text-xs text-yellow-700">
+        Incolla questo codice nella <strong>causale/descrizione</strong> del pagamento PayPal o Revolut!
+      </p>
+    </div>
+
+    <div class="bg-green-50 border-2 border-green-500 rounded-lg p-4 mb-4">
+      <p class="text-xs font-semibold text-green-800 mb-2">💶 IMPORTO DA PAGARE</p>
+      <p id="order-total-display" class="text-4xl md:text-5xl font-bold text-green-600 mb-2">
+        €0.00
+      </p>
+      <p class="text-xs text-green-700 font-medium">
+        Inserisci <strong>esattamente</strong> questo importo nel pagamento
+      </p>
+    </div>
+
+    <button 
+      onclick="proceedToPayment()" 
+      class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
+      Vai al Pagamento →
+    </button>
+  </div>
+</div>
+
+<script>
+  const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000'
+    : 'https://cv-merch-backend.onrender.com';
+
+  let products = [];
+  let cart = [];
+  let bundleDiscount = 5;
+  let selectedColors = {};
+  let selectedSizes = {};
+  let loadAttempts = 0;
+  let appliedPromo = null;
+  let cartMinimized = false;
+  const MAX_RETRIES = 3;
+
+  const colorMap = {
+    'Military Green': '#4a5d4f',
+    'Military Tilla': '#4a5d4f',
+    'Blue Navy': '#1e3a5f',
+    'Blue Nesio': '#1e3a5f',
+    'Dark Heather': '#3c3c3c',
+    'Grey Smokerz': '#3c3c3c',
+    'Maroon': '#800020',
+    'Red Panzer': '#800020',
+    'Dark Chocolate': '#3d2b1f',
+    'Chocolate Carma': '#3d2b1f',
+    'Black': '#000000',
+    'White': '#ffffff',
+    'Grey': '#808080',
+    'Red': '#dc2626',
+    'Blue': '#2563eb'
+  };
+
+  // Countdown Timer
+  const countdownEndDate = new Date('2025-12-03T23:59:59').getTime();
+  
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownEndDate - now;
+    
+    if (distance < 0) {
+      const banner = document.getElementById('countdown-banner');
+      if (banner) banner.style.display = 'none';
+      return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    const daysEl = document.getElementById('countdown-days');
+    const hoursEl = document.getElementById('countdown-hours');
+    const minutesEl = document.getElementById('countdown-minutes');
+    const secondsEl = document.getElementById('countdown-seconds');
+    
+    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+  }
+
+  async function prewarmBackend() {
+    try {
+      console.log('🔥 Pre-warming backend...');
+      await fetch(`${API_URL}/health`, { 
+        method: 'GET',
+        signal: AbortSignal.timeout(5000)
+      });
+      console.log('✅ Backend warm!');
+    } catch (err) {
+      console.log('⚠️ Prewarm failed, backend might be sleeping');
+    }
+  }
+
+  async function loadProducts(isRetry = false) {
+    loadAttempts++;
+    const container = document.getElementById('products-container');
+    
+    if (!isRetry) {
+      container.innerHTML = `
+        <div class="col-span-full text-center py-12">
+          <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto mb-4"></div>
+          <p class="text-gray-600 font-semibold mb-2">Caricamento prodotti...</p>
+          <p class="text-sm text-gray-400">
+            ${loadAttempts > 1 ? `Tentativo ${loadAttempts}/${MAX_RETRIES}` : 'Attendi qualche secondo'}
+          </p>
+        </div>
+      `;
+    }
+
+    try {
+      const timeout = loadAttempts === 1 ? 30000 : 15000;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+      
+      const res = await fetch(`${API_URL}/api/products`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      
+      const data = await res.json();
+      products = data.products;
+      bundleDiscount = data.bundleDiscount;
+      window.storeConfig = {
+        promoCodesVisible: data.promoCodesVisible
+      };
+      loadAttempts = 0;
+      renderProducts();
+      
+    } catch (err) {
+      console.error('❌ Error loading products:', err);
+      
+      if (loadAttempts < MAX_RETRIES) {
+        setTimeout(() => loadProducts(true), 3000);
+      } else {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-white rounded-lg shadow-lg p-8">
+            <div class="text-6xl mb-4">😕</div>
+            <p class="text-red-600 font-bold text-xl mb-2">Impossibile caricare i prodotti</p>
+            <button onclick="location.reload()" class="mt-4 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-semibold">
+              🔄 Ricarica la pagina
+            </button>
+          </div>
+        `;
+      }
+    }
+  }
+
+  function renderProducts() {
+    const container = document.getElementById('products-container');
+    
+    if (products.length === 0) {
+      container.innerHTML = `
+        <div class="col-span-full text-center py-12 bg-white rounded-lg shadow">
+          <p class="text-gray-500 text-lg">Nessun prodotto disponibile</p>
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = products.map(product => {
+      if (!selectedColors[product.id]) selectedColors[product.id] = product.colors[0];
+      if (!selectedSizes[product.id]) selectedSizes[product.id] = product.sizes[0];
+      
+      const currentColor = selectedColors[product.id];
+      const currentImages = getImagesForColor(product, currentColor);
+      const showOriginalPrice = product.basePrice && product.price < product.basePrice;
+      
+      return `
+        <div class="product-card bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="carousel-container relative bg-gray-100">
+            ${currentImages.length > 0 
+              ? `
+                <div class="image-carousel flex overflow-x-auto snap-x" id="carousel-${product.id}">
+                  ${currentImages.map(url => `
+                    <img 
+                      src="${url}" 
+                      alt="${product.name}" 
+                      class="w-full h-64 md:h-80 object-cover flex-shrink-0 snap-center cursor-pointer"
+                      onclick="openImageZoom('${url}')"
+                    >
+                  `).join('')}
+                </div>
+                ${currentImages.length > 1 ? `
+                  <button class="carousel-btn left" onclick="scrollCarousel('${product.id}', -1)">
+                    &#8249;
+                  </button>
+                  <button class="carousel-btn right" onclick="scrollCarousel('${product.id}', 1)">
+                    &#8250;
+                  </button>
+                ` : ''}
+              `
+              : `<div class="bg-gray-200 h-64 md:h-80 flex items-center justify-center"><span class="text-gray-400 text-6xl">📦</span></div>`}
+            
+            <div class="absolute top-3 left-3 bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+              ${currentColor}
+            </div>
+            
+            ${showOriginalPrice ? `
+              <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                -${Math.round(product.basePrice - product.price)}€
+              </div>
+            ` : ''}
+          </div>
+          
+          <div class="p-4 md:p-6">
+            <h3 class="text-lg md:text-xl font-bold mb-1">${product.name}</h3>
+            ${product.description ? `<p class="text-sm text-gray-600 mb-3">${product.description}</p>` : ''}
+            
+            <div class="flex items-center gap-3 mb-4">
+              ${showOriginalPrice ? `
+                <p class="text-lg text-gray-400 line-through">€${product.basePrice.toFixed(2)}</p>
+                <p class="text-2xl md:text-3xl font-bold text-red-600">€${product.price.toFixed(2)}</p>
+              ` : `
+                <p class="text-2xl md:text-3xl font-bold text-gray-900">€${product.price.toFixed(2)}</p>
+              `}
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-xs md:text-sm font-semibold mb-3">Colore</label>
+              <div class="flex gap-2 flex-wrap pb-6">
+                ${product.colors.map(color => `
+                  <div class="color-swatch ${color === currentColor ? 'selected' : ''}" 
+                       style="background-color: ${getColorHex(color)}"
+                       onclick="selectColor('${product.id}', '${color}')"
+                       data-color="${color}">
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-xs md:text-sm font-semibold">Taglia</label>
+                ${product.sizeGuide ? `
+                  <button onclick="showSizeGuide(\`${product.sizeGuide.replace(/`/g, '\\`')}\`)" class="text-xs text-blue-600 hover:underline">
+                    📏 Guida taglie
+                  </button>
+                ` : ''}
+              </div>
+              <div class="flex gap-2 flex-wrap">
+                ${product.sizes.map(size => `
+                  <button class="size-btn px-3 md:px-4 py-2 border rounded ${size === selectedSizes[product.id] ? 'selected' : ''}"
+                          onclick="selectSize('${product.id}', '${size}')">
+                    ${size}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 md:gap-4">
+              <input type="number" id="qty-${product.id}" value="1" min="1" max="10" 
+                     class="w-16 md:w-20 px-2 py-2 border rounded text-center text-sm">
+              <button onclick="addToCart('${product.id}')" 
+                      class="flex-1 bg-black text-white py-2 md:py-3 rounded font-semibold hover:bg-gray-800 transition text-sm md:text-base">
+                Aggiungi al carrello
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function getColorHex(colorName) {
+    return colorMap[colorName] || '#666666';
+  }
+
+  function getImagesForColor(product, color) {
+    if (!product.images || product.images.length === 0) return [];
+    const colorImages = product.images.find(img => img.color === color);
+    return colorImages ? colorImages.urls : [];
+  }
+
+  function selectColor(productId, color) {
+    selectedColors[productId] = color;
+    renderProducts();
+  }
+
+  function selectSize(productId, size) {
+    selectedSizes[productId] = size;
+    renderProducts();
+  }
+
+  function showSizeGuide(guide) {
+    document.getElementById('size-guide-content').innerHTML = guide.replace(/\n/g, '<br>');
+    document.getElementById('size-guide-modal').classList.remove('hidden');
+  }
+
+  function closeSizeGuide() {
+    document.getElementById('size-guide-modal').classList.add('hidden');
+  }
+
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const color = selectedColors[productId] || product.colors[0];
+    const size = selectedSizes[productId] || product.sizes[0];
+    const qty = parseInt(document.getElementById(`qty-${productId}`).value);
+
+    cart.push({ product, color, size, quantity: qty });
+    updateCart();
+    
+    const btn = event.target;
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Aggiunto!';
+    btn.classList.add('bg-green-600');
+    btn.classList.remove('bg-black');
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.classList.remove('bg-green-600');
+      btn.classList.add('bg-black');
+    }, 1500);
+  }
+
+  function removeFromCart(index) {
+    if (confirm('Rimuovere questo articolo dal carrello?')) {
+      cart.splice(index, 1);
+      appliedPromo = null;
+      updateCart();
+    }
+  }
+
+  function updateCart() {
+    const summary = document.getElementById('cart-summary');
+    const count = document.getElementById('cart-count');
+    
+    if (cart.length === 0) {
+      summary.classList.add('hidden');
+      count.classList.add('hidden');
+      return;
+    }
+
+    summary.classList.remove('hidden');
+    count.classList.remove('hidden');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    count.textContent = totalItems;
+
+    let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    
+    const sizeCounts = {};
+    cart.forEach(item => {
+      sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
+    });
+    const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
+    const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
+    
+    const afterBundle = subtotal - bundleDiscountAmount;
+    const promoDiscountAmount = appliedPromo ? appliedPromo.discount : 0;
+    const total = afterBundle - promoDiscountAmount;
+
+    renderCartItems();
+    document.getElementById('cart-subtotal').textContent = `€${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total').textContent = `€${total.toFixed(2)}`;
+    
+    if (bundleDiscountAmount > 0) {
+      document.getElementById('bundle-discount-row').classList.remove('hidden');
+      document.getElementById('bundle-discount-text').textContent = `Sconto Bundle ${bundleDiscount}%`;
+      document.getElementById('bundle-discount-amount').textContent = `-€${bundleDiscountAmount.toFixed(2)}`;
+    } else {
+      document.getElementById('bundle-discount-row').classList.add('hidden');
+    }
+    
+    if (promoDiscountAmount > 0) {
+      document.getElementById('promo-discount-row').classList.remove('hidden');
+      document.getElementById('promo-discount-text').textContent = `Codice ${appliedPromo.code}`;
+      document.getElementById('promo-discount-amount').textContent = `-€${promoDiscountAmount.toFixed(2)}`;
+    } else {
+      document.getElementById('promo-discount-row').classList.add('hidden');
+    }
+  }
+
+  function renderCartItems() {
+    const container = document.getElementById('cart-items-list');
+    container.innerHTML = cart.map((item, index) => `
+      <div class="flex justify-between items-center text-sm bg-gray-50 p-2 rounded">
+        <span class="flex-1">${item.quantity}x ${item.product.name} - ${item.color} (${item.size})</span>
+        <span class="font-medium mr-2">€${(item.product.price * item.quantity).toFixed(2)}</span>
+        <button onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800 font-bold">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function toggleCart() {
+    const summary = document.getElementById('cart-summary');
+    if (cart.length > 0) {
+      if (cartMinimized) {
+        cartMinimized = false;
+        summary.classList.remove('minimized');
+        document.getElementById('cart-toggle-icon').textContent = '▼';
+      } else {
+        openCheckout();
+      }
+    }
+  }
+
+  function toggleCartMinimize() {
+    const summary = document.getElementById('cart-summary');
+    cartMinimized = !cartMinimized;
+    
+    if (cartMinimized) {
+      summary.classList.add('minimized');
+      document.getElementById('cart-toggle-icon').textContent = '▲';
+    } else {
+      summary.classList.remove('minimized');
+      document.getElementById('cart-toggle-icon').textContent = '▼';
+    }
+  }
+
+  function openCheckout() {
+    if (cart.length === 0) return;
+    
+    const modal = document.getElementById('checkout-modal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    renderCheckoutItems();
+    updateCheckoutTotals();
+    
+    const promoSection = document.getElementById('promo-code-section');
+    if (promoSection) {
+      if (window.storeConfig?.promoCodesVisible === false) {
+        promoSection.style.display = 'none';
+      } else {
+        promoSection.style.display = 'block';
+      }
+    }
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkout-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  function renderCheckoutItems() {
+    const container = document.getElementById('checkout-items');
+    container.innerHTML = cart.map((item, index) => `
+      <div class="flex justify-between items-center text-sm">
+        <span class="flex-1">${item.quantity}x ${item.product.name} - ${item.color} (${item.size})</span>
+        <span class="font-medium mr-2">€${(item.product.price * item.quantity).toFixed(2)}</span>
+        <button onclick="removeFromCartCheckout(${index})" class="text-red-600 hover:text-red-800 font-bold">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeFromCartCheckout(index) {
+    if (confirm('Rimuovere questo articolo?')) {
+      cart.splice(index, 1);
+      appliedPromo = null;
+      document.getElementById('promo-code-input').value = '';
+      document.getElementById('promo-message').classList.add('hidden');
+      
+      if (cart.length === 0) {
+        closeCheckout();
+        updateCart();
+      } else {
+        renderCheckoutItems();
+        updateCheckoutTotals();
         updateCart();
       }
+    }
+  }
+
+  function updateCheckoutTotals() {
+    let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    
+    const sizeCounts = {};
+    cart.forEach(item => {
+      sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
     });
-  </script>
+    const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
+    const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
+    
+    const afterBundle = subtotal - bundleDiscountAmount;
+    const promoDiscountAmount = appliedPromo ? appliedPromo.discount : 0;
+    const total = afterBundle - promoDiscountAmount;
+
+    document.getElementById('checkout-subtotal').textContent = `€${subtotal.toFixed(2)}`;
+    document.getElementById('checkout-total').textContent = `€${total.toFixed(2)}`;
+    
+    if (bundleDiscountAmount > 0) {
+      document.getElementById('checkout-bundle-row').classList.remove('hidden');
+      document.getElementById('checkout-bundle-text').textContent = `Sconto Bundle ${bundleDiscount}%`;
+      document.getElementById('checkout-bundle-amount').textContent = `-€${bundleDiscountAmount.toFixed(2)}`;
+    } else {
+      document.getElementById('checkout-bundle-row').classList.add('hidden');
+    }
+    
+    if (promoDiscountAmount > 0) {
+      document.getElementById('checkout-promo-row').classList.remove('hidden');
+      document.getElementById('checkout-promo-text').textContent = `Codice ${appliedPromo.code}`;
+      document.getElementById('checkout-promo-amount').textContent = `-€${promoDiscountAmount.toFixed(2)}`;
+    } else {
+      document.getElementById('checkout-promo-row').classList.add('hidden');
+    }
+  }
+
+  async function applyPromoCode() {
+    const input = document.getElementById('promo-code-input');
+    const code = input.value.trim().toUpperCase();
+    const message = document.getElementById('promo-message');
+    
+    if (!code) {
+      message.textContent = 'Inserisci un codice';
+      message.className = 'text-xs mt-1 text-red-600';
+      message.classList.remove('hidden');
+      return;
+    }
+
+    const email = document.getElementById('customer-email').value;
+    if (!email) {
+      message.textContent = 'Inserisci prima la tua email';
+      message.className = 'text-xs mt-1 text-red-600';
+      message.classList.remove('hidden');
+      return;
+    }
+
+    let subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    const sizeCounts = {};
+    cart.forEach(item => {
+      sizeCounts[item.size] = (sizeCounts[item.size] || 0) + item.quantity;
+    });
+    const hasBundle = Object.values(sizeCounts).some(count => count >= 2);
+    const bundleDiscountAmount = hasBundle ? subtotal * (bundleDiscount / 100) : 0;
+    const afterBundle = subtotal - bundleDiscountAmount;
+
+    try {
+      const res = await fetch(`${API_URL}/api/validate-promo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, customerEmail: email, subtotal: afterBundle })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.valid) {
+        appliedPromo = data;
+        message.textContent = data.message;
+        message.className = 'text-xs mt-1 text-green-600';
+        message.classList.remove('hidden');
+        updateCheckoutTotals();
+        updateCart();
+      } else {
+        message.textContent = data.error || 'Codice non valido';
+        message.className = 'text-xs mt-1 text-red-600';
+        message.classList.remove('hidden');
+        appliedPromo = null;
+      }
+    } catch (err) {
+      message.textContent = 'Errore nella validazione';
+      message.className = 'text-xs mt-1 text-red-600';
+      message.classList.remove('hidden');
+    }
+  }
+
+  async function handleCheckout() {
+    const firstname = document.getElementById('customer-firstname').value.trim();
+    const lastname = document.getElementById('customer-lastname').value.trim();
+    const email = document.getElementById('customer-email').value.trim();
+    const phone = document.getElementById('customer-phone').value.trim();
+    const payment = document.querySelector('input[name="payment"]:checked').value;
+
+    if (!firstname || !lastname || !email || !phone) {
+      alert('Compila tutti i campi obbligatori');
+      return;
+    }
+
+    const fullName = `${firstname} ${lastname}`;
+    
+    const orderData = {
+      customerEmail: email,
+      customerName: fullName,
+      customerPhone: phone,
+      paymentMethod: payment,
+      promoCode: appliedPromo ? appliedPromo.code : null,
+      items: cart.map(item => ({
+        productId: item.product.id,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity
+      }))
+    };
+
+    try {
+      const res = await fetch(`${API_URL}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+
+      const data = await res.json();
+      
+      if (res.ok) {
+        window.pendingPayment = {
+          url: data.paymentUrl,
+          uniqueCode: data.uniqueCode,
+          total: data.total
+        };
+        closeCheckout();
+        showUniqueCodeModal(data.uniqueCode, data.total);
+      } else {
+        alert(data.error || 'Errore durante la creazione dell\'ordine');
+      }
+      
+    } catch (err) {
+      alert('Errore durante la creazione dell\'ordine. Riprova.');
+      console.error(err);
+    }
+  }
+
+  function showUniqueCodeModal(code, total) {
+    document.getElementById('unique-code-display').textContent = code;
+    document.getElementById('order-total-display').textContent = `€${total.toFixed(2)}`; 
+    document.getElementById('unique-code-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function copyUniqueCode() {
+    const code = document.getElementById('unique-code-display').textContent;
+    
+    navigator.clipboard.writeText(code).then(() => {
+      document.getElementById('copy-icon').textContent = '✅';
+      document.getElementById('copy-text').textContent = 'Copiato!';
+      
+      setTimeout(() => {
+        document.getElementById('copy-icon').textContent = '📋';
+        document.getElementById('copy-text').textContent = 'Copia Codice';
+      }, 2000);
+    }).catch(() => {
+      alert('Errore nella copia. Seleziona e copia manualmente.');
+    });
+  }
+
+  function proceedToPayment() {
+    if (window.pendingPayment && window.pendingPayment.url) {
+      sessionStorage.setItem('lastOrder', JSON.stringify({
+        uniqueCode: window.pendingPayment.uniqueCode,
+        total: window.pendingPayment.total,
+        timestamp: Date.now()
+      }));
+      
+      cart = [];
+      appliedPromo = null;
+      updateCart();
+      
+      window.open(window.pendingPayment.url, '_blank');
+      window.location.href = 'grazie.html';
+    }
+  }
+
+  function scrollCarousel(productId, direction) {
+    const carousel = document.getElementById(`carousel-${productId}`);
+    const scrollAmount = carousel.clientWidth;
+    carousel.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  function openImageZoom(url) {
+    document.getElementById('zoom-image').src = url;
+    document.getElementById('zoom-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeImageZoom() {
+    document.getElementById('zoom-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Event listeners for modals
+  document.getElementById('checkout-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'checkout-modal') closeCheckout();
+  });
+
+  document.getElementById('size-guide-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'size-guide-modal') closeSizeGuide();
+  });
+
+  // Prevent back after checkout
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      cart = [];
+      appliedPromo = null;
+      updateCart();
+    }
+  });
+
+  // Initialize
+  (async function init() {
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    await prewarmBackend();
+    await loadProducts();
+  })();
+</script>
 
 </body>
 </html>
