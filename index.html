@@ -472,6 +472,7 @@
   let selectedSizes = {};
   let loadAttempts = 0;
   let appliedPromo = null;
+  let isSubmitting = false;
   let cartMinimized = false;
   const MAX_RETRIES = 3;
 
@@ -997,6 +998,8 @@
   }
 
   async function handleCheckout() {
+    if (isSubmitting) return;
+    
     const firstname = document.getElementById('customer-firstname').value.trim();
     const lastname = document.getElementById('customer-lastname').value.trim();
     const email = document.getElementById('customer-email').value.trim();
@@ -1007,6 +1010,14 @@
       alert('Compila tutti i campi obbligatori');
       return;
     }
+
+    // Blocca submit multipli
+    isSubmitting = true;
+    const btn = document.querySelector('#checkout-form button[onclick="handleCheckout()"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Invio in corso...';
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
 
     const fullName = `${firstname} ${lastname}`;
     
@@ -1048,31 +1059,37 @@
     } catch (err) {
       alert('Errore durante la creazione dell\'ordine. Riprova.');
       console.error(err);
+    } finally {
+      // Riabilita sempre il bottone
+      isSubmitting = false;
+      btn.disabled = false;
+      btn.textContent = originalText;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
   }
 
-  function showUniqueCodeModal(code, total) {
-    document.getElementById('unique-code-display').textContent = code;
-    document.getElementById('order-total-display').textContent = `€${total.toFixed(2)}`; 
-    document.getElementById('unique-code-modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
+    function showUniqueCodeModal(code, total) {
+      document.getElementById('unique-code-display').textContent = code;
+      document.getElementById('order-total-display').textContent = `€${total.toFixed(2)}`; 
+      document.getElementById('unique-code-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
 
-  function copyUniqueCode() {
-    const code = document.getElementById('unique-code-display').textContent;
-    
-    navigator.clipboard.writeText(code).then(() => {
-      document.getElementById('copy-icon').textContent = '✅';
-      document.getElementById('copy-text').textContent = 'Copiato!';
+    function copyUniqueCode() {
+      const code = document.getElementById('unique-code-display').textContent;
       
-      setTimeout(() => {
-        document.getElementById('copy-icon').textContent = '📋';
-        document.getElementById('copy-text').textContent = 'Copia Codice';
-      }, 2000);
-    }).catch(() => {
-      alert('Errore nella copia. Seleziona e copia manualmente.');
-    });
-  }
+      navigator.clipboard.writeText(code).then(() => {
+        document.getElementById('copy-icon').textContent = '✅';
+        document.getElementById('copy-text').textContent = 'Copiato!';
+        
+        setTimeout(() => {
+          document.getElementById('copy-icon').textContent = '📋';
+          document.getElementById('copy-text').textContent = 'Copia Codice';
+        }, 2000);
+      }).catch(() => {
+        alert('Errore nella copia. Seleziona e copia manualmente.');
+      });
+    }
 
   function proceedToPayment() {
     if (window.pendingPayment && window.pendingPayment.url) {
