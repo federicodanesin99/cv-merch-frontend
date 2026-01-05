@@ -1,24 +1,24 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { map, take } from 'rxjs/operators';
 
-/**
- * Guard che protegge routes riservate agli utenti autenticati
- * 
- * Uso:
- * { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] }
- */
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
   
-  // Controlla se l'utente è loggato
-  if (authService.isAuthenticated()) {
-    return true; // Accesso consentito
-  }
-  
-  // Redirect a login con returnUrl
-  return router.createUrlTree(['/login'], {
-    queryParams: { returnUrl: state.url }
-  });
+  return authService.user$.pipe(
+    take(1),
+    map(user => {
+      if (user) {
+        return true; // Utente loggato, accesso consentito
+      } else {
+        // Redirect a login
+        router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: router.url }
+        });
+        return false;
+      }
+    })
+  );
 };

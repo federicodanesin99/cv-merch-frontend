@@ -11,7 +11,6 @@ import {
   sendEmailVerification
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Observable, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,27 +19,32 @@ export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
   
-  // Signal per reactive state
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
-  
-  // Observable dell'utente corrente (Firebase lo aggiorna automaticamente!)
   user$ = user(this.auth);
   
   constructor() {
+    console.log('🔥 AuthService initialized');
+    console.log('🔥 Firebase Auth object:', this.auth);
+    
     // Ascolta cambiamenti stato autenticazione
     this.user$.subscribe(user => {
+      console.log('🔥 Auth state changed:', {
+        user: user,
+        email: user?.email,
+        uid: user?.uid,
+        isNull: user === null,
+        isUndefined: user === undefined
+      });
+      
       this.currentUser.set(user);
       this.isAuthenticated.set(!!user);
-      console.log('Auth state changed:', user?.email);
     });
   }
   
-  /**
-   * REGISTRAZIONE
-   * Firebase crea automaticamente l'account e logga l'utente
-   */
   async register(email: string, password: string, displayName: string) {
+    console.log('📝 Registrazione:', email);
+    
     try {
       const credential = await createUserWithEmailAndPassword(
         this.auth, 
@@ -48,13 +52,14 @@ export class AuthService {
         password
       );
       
-      // Aggiorna nome utente
+      console.log('✅ Utente creato:', credential.user.uid);
+      
       await updateProfile(credential.user, { displayName });
+      console.log('✅ Profilo aggiornato');
       
-      // Invia email verifica (opzionale ma consigliato!)
       await sendEmailVerification(credential.user);
+      console.log('✅ Email verifica inviata');
       
-      console.log('✅ Registrazione completata:', credential.user.email);
       return credential.user;
     } catch (error: any) {
       console.error('❌ Errore registrazione:', error);
@@ -62,11 +67,10 @@ export class AuthService {
     }
   }
   
-  /**
-   * LOGIN
-   * Firebase verifica credenziali e crea sessione automaticamente
-   */
   async login(email: string, password: string) {
+    console.log('🔐 Tentativo login:', email);
+    console.log('🔐 Auth disponibile:', !!this.auth);
+    
     try {
       const credential = await signInWithEmailAndPassword(
         this.auth, 
@@ -74,18 +78,24 @@ export class AuthService {
         password
       );
       
-      console.log('✅ Login completato:', credential.user.email);
+      console.log('✅ Login Firebase completato:', {
+        uid: credential.user.uid,
+        email: credential.user.email
+      });
+      
       return credential.user;
+      
     } catch (error: any) {
-      console.error('❌ Errore login:', error);
+      console.error('❌ Errore login Firebase:', {
+        code: error.code,
+        message: error.message,
+        fullError: error
+      });
+      
       throw this.handleError(error);
     }
   }
   
-  /**
-   * LOGOUT
-   * Firebase elimina sessione e token
-   */
   async logout() {
     try {
       await signOut(this.auth);
@@ -97,10 +107,6 @@ export class AuthService {
     }
   }
   
-  /**
-   * PASSWORD RESET
-   * Firebase invia email con link reset
-   */
   async resetPassword(email: string) {
     try {
       await sendPasswordResetEmail(this.auth, email);
@@ -112,37 +118,40 @@ export class AuthService {
     }
   }
   
-  /**
-   * GET TOKEN (per chiamate API backend)
-   * Firebase gestisce automaticamente il refresh del token!
-   */
   async getToken(): Promise<string | null> {
     const user = this.auth.currentUser;
     if (!user) return null;
     
     try {
-      // Firebase restituisce token valido (refresh automatico se scaduto!)
       return await user.getIdToken();
     } catch (error) {
       console.error('❌ Errore get token:', error);
       return null;
     }
   }
+
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
+  }
+
+  getCurrentUserId(): string | null {
+    return this.auth.currentUser?.uid || null;
+  }
   
-  /**
-   * Gestione errori Firebase (traduzione messaggi)
-   */
   private handleError(error: any): string {
+    console.error('🔥 Firebase Error:', error.code, error.message);
+    
     const errorMessages: { [key: string]: string } = {
       'auth/email-already-in-use': 'Email già registrata',
       'auth/weak-password': 'Password troppo debole (min 6 caratteri)',
       'auth/invalid-email': 'Email non valida',
       'auth/user-not-found': 'Utente non trovato',
       'auth/wrong-password': 'Password errata',
+      'auth/invalid-credential': 'Email o password non corretti',
       'auth/too-many-requests': 'Troppi tentativi. Riprova più tardi',
       'auth/network-request-failed': 'Errore di connessione'
     };
     
-    return errorMessages[error.code] || 'Errore imprevisto';
+    return errorMessages[error.code] || `Errore: ${error.message}`;
   }
 }
