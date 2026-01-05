@@ -1,23 +1,18 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, Routes } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-
-const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./app.component').then(m => m.AppComponent)
-  },
-  {
-    path: 'grazie',
-    loadComponent: () => import('./features/thank-you/thank-you.component').then(m => m.ThankYouComponent)
-  },
-  { path: '**', redirectTo: '' }
-];
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { appRoutes } from './app.routes';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(appRoutes),
     provideHttpClient()
+    // Firebase
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth())
   ]
 };
