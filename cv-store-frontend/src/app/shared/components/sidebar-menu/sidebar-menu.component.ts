@@ -160,18 +160,26 @@ import { Observable } from 'rxjs';
         <!-- Footer sidebar (se loggato) -->
         <div 
           *ngIf="user$ | async as user"
-          class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs text-gray-500">Loggato come:</p>
-              <p class="text-sm font-semibold truncate max-w-[180px]">{{ user.email }}</p>
+          class="sticky bottom-0 p-4 border-t border-gray-200 bg-gray-50">
+          <div class="mb-3">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-bold">
+                {{ user.email?.charAt(0).toUpperCase() }}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-gray-500">Loggato come:</p>
+                <p class="text-sm font-semibold truncate">{{ user.email }}</p>
+              </div>
             </div>
-            <button 
-              (click)="handleLogout()"
-              class="px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition">
-              Esci
-            </button>
           </div>
+          <button 
+            (click)="handleLogout()"
+            class="w-full px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            Logout
+          </button>
         </div>
       </aside>
     </div>
@@ -220,6 +228,11 @@ export class SidebarMenuComponent implements OnInit {
 
   getProductCount(category: string): number {
     return this.productService.getProductCountByCategory(category);
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/auth/login']);
+    this.close();
   }
 
   close(): void {
