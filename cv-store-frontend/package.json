@@ -7,11 +7,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:cv-store-frontend": "node dist/cv-store-frontend/server/server.mjs",
-    "build:prod": "ng build --configuration production",
+    "build": "ng build --configuration production",
     "vercel-build": "ng build --configuration production"
   },
 
