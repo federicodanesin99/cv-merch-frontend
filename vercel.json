@@ -1,22 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
-  "builds": [
+  "buildCommand": "cd cv-store-frontend && npm install && npm run build",
+  "outputDirectory": "cv-store-frontend/dist/cv-store-frontend/browser",
+  "installCommand": "cd cv-store-frontend && npm install",
+  "rewrites": [
     {
-      "src": "cv-store-frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/cv-store-frontend/browser"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
