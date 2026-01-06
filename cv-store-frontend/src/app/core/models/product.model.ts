@@ -1,6 +1,7 @@
 export interface Product {
   id: string;
   name: string;
+  category?: string; 
   description?: string;
   price: number;
   basePrice?: number;
@@ -17,6 +18,7 @@ export interface ProductImage {
 
 export interface ProductsResponse {
   products: Product[];
+  categories?: string[];
   bundleDiscount: number;
   promoCodesVisible: boolean;
 }

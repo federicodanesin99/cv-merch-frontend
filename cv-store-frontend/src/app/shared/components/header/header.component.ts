@@ -90,7 +90,7 @@ export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   
   // URL del logo - sostituisci con il tuo link Cloudinary
-  logoUrl = 'https://res.cloudinary.com/dr90huuw3/image/upload/v1767709712/Logo_Foto_Profilo_txxs9s.png';
+  logoUrl = 'https://res.cloudinary.com/dr90huuw3/image/upload/v1767713335/Logo_no_contorno_nero_mi1qnb.png';
 
   constructor(
     private cartService: CartService,

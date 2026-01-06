@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { ContactComponent } from './features/contact/contact.component';
+import { AboutComponent } from './features/about/about.component';
 
 export const appRoutes: Routes = [
    // Home page
@@ -13,7 +15,15 @@ export const appRoutes: Routes = [
     path: 'products',
     loadComponent: () => import('./features/products/products.component').then(m => m.ProductsComponent),
   },
-  
+  {
+    path: 'about',
+    loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent)
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent)
+  },
+
   // Auth routes
   {
     path: 'auth',
@@ -45,5 +55,6 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./features/thank-you/thank-you.component').then(m => m.ThankYouComponent),
   },
   
-  { path: '**', redirectTo: '/products' }
+  { path: '**', redirectTo: '/products' },
+
 ];

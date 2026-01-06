@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { ProductService } from '../../../core/services/product.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -22,10 +23,10 @@ import { Observable } from 'rxjs';
       <!-- Sidebar -->
       <aside 
         (click)="$event.stopPropagation()"
-        class="absolute top-0 left-0 w-80 h-full bg-white shadow-xl transform transition-transform">
+        class="absolute top-0 left-0 w-80 h-full bg-white shadow-xl transform transition-transform overflow-y-auto">
         
         <!-- Header sidebar -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
           <h3 class="text-xl font-bold">Menu</h3>
           <button 
             (click)="close()"
@@ -39,6 +40,7 @@ import { Observable } from 'rxjs';
         <!-- Menu items -->
         <nav class="p-4">
           <ul class="space-y-2">
+            <!-- Home -->
             <li>
               <a 
                 routerLink="/" 
@@ -51,18 +53,62 @@ import { Observable } from 'rxjs';
               </a>
             </li>
 
+            <!-- Prodotti con sottomenu -->
             <li>
-              <a 
-                routerLink="/products" 
-                (click)="close()"
-                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              <button 
+                (click)="toggleProducts()"
+                class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                  </svg>
+                  <span class="font-semibold">Prodotti</span>
+                </div>
+                <svg 
+                  class="w-4 h-4 transition-transform"
+                  [class.rotate-180]="isProductsOpen"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
-                <span class="font-semibold">Prodotti</span>
-              </a>
+              </button>
+
+              <!-- Sottomenu categorie -->
+              <ul 
+                *ngIf="isProductsOpen"
+                class="ml-4 mt-2 space-y-1 border-l-2 border-gray-200 pl-4">
+                
+                <!-- Tutti i prodotti -->
+                <li>
+                  <a 
+                    routerLink="/products"
+                    (click)="close()"
+                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition text-sm">
+                    <span>Tutti i Prodotti</span>
+                    <span class="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                      {{ totalProducts }}
+                    </span>
+                  </a>
+                </li>
+
+                <!-- Categorie dinamiche -->
+                <li *ngFor="let category of categories$ | async">
+                  <a 
+                    [routerLink]="['/products']"
+                    [queryParams]="{category: category}"
+                    (click)="close()"
+                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition text-sm capitalize">
+                    <span>{{ category }}</span>
+                    <span class="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                      {{ getProductCount(category) }}
+                    </span>
+                  </a>
+                </li>
+              </ul>
             </li>
 
+            <!-- Carrello -->
             <li>
               <a 
                 routerLink="/cart" 
@@ -83,6 +129,7 @@ import { Observable } from 'rxjs';
             <!-- Divider -->
             <li class="border-t border-gray-200 my-4"></li>
 
+            <!-- Chi Siamo -->
             <li>
               <a 
                 routerLink="/about" 
@@ -95,6 +142,7 @@ import { Observable } from 'rxjs';
               </a>
             </li>
 
+            <!-- Contatti -->
             <li>
               <a 
                 routerLink="/contact" 
@@ -116,7 +164,7 @@ import { Observable } from 'rxjs';
           <div class="flex items-center justify-between">
             <div>
               <p class="text-xs text-gray-500">Loggato come:</p>
-              <p class="text-sm font-semibold">{{ user.email }}</p>
+              <p class="text-sm font-semibold truncate max-w-[180px]">{{ user.email }}</p>
             </div>
             <button 
               (click)="handleLogout()"
@@ -128,31 +176,56 @@ import { Observable } from 'rxjs';
       </aside>
     </div>
   `,
-  styles: []
+  styles: [`
+    .rotate-180 {
+      transform: rotate(180deg);
+    }
+  `]
 })
 export class SidebarMenuComponent implements OnInit {
   @Input() isOpen = false;
   @Output() closeMenu = new EventEmitter<void>();
 
   cartItemCount = 0;
+  totalProducts = 0;
   user$!: Observable<any>;
+  categories$!: Observable<string[]>;
+  isProductsOpen = false;
 
   constructor(
     private cartService: CartService,
     private authService: AuthService,
+    private productService: ProductService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.user$ = this.authService.user$;
+    this.categories$ = this.productService.getCategories();
     
+    // Subscribe al cart
     this.cartService.cartItems$.subscribe(() => {
       this.cartItemCount = this.cartService.getItemCount();
     });
+
+    // Subscribe ai prodotti per contare il totale
+    this.productService.getProducts().subscribe(products => {
+      this.totalProducts = products.length;
+    });
+  }
+
+  toggleProducts(): void {
+    this.isProductsOpen = !this.isProductsOpen;
+  }
+
+  getProductCount(category: string): number {
+    return this.productService.getProductCountByCategory(category);
   }
 
   close(): void {
     this.closeMenu.emit();
+    // Reset submenu quando chiudi
+    this.isProductsOpen = false;
   }
 
   handleLogout(): void {
