@@ -11,7 +11,6 @@
     "test": "ng test",
     "serve:ssr:cv-store-frontend": "node dist/cv-store-frontend/server/server.mjs",
     "build": "ng build --configuration production",
-    "vercel-build": "ng build --configuration production"
   },
 
   "prettier": {
