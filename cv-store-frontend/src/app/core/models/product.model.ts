@@ -9,6 +9,7 @@ export interface Product {
   sizes: string[];
   images: ProductImage[];
   sizeGuide?: string;
+  isComingSoon?: boolean; 
 }
 
 export interface ProductImage {
