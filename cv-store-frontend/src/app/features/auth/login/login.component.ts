@@ -24,7 +24,36 @@ import { AuthService } from '../../../core/services/auth.service';
           <p class="text-gray-600">Accedi al tuo account CLASSE VENETA</p>
         </div>
 
-        <!-- Form -->
+        <!-- Google Sign-In Button -->
+        <button 
+          type="button"
+          (click)="onGoogleLogin()"
+          [disabled]="isLoading || isGoogleLoading"
+          class="w-full mb-6 bg-white border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 hover:border-gray-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:active:scale-100 flex items-center justify-center gap-3">
+          <svg *ngIf="!isGoogleLoading" class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <svg *ngIf="isGoogleLoading" class="animate-spin h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>{{ isGoogleLoading ? 'Accesso in corso...' : 'Continua con Google' }}</span>
+        </button>
+
+        <!-- Divider -->
+        <div class="relative mb-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">oppure con email</span>
+          </div>
+        </div>
+
+        <!-- Form Email/Password -->
         <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="space-y-4">
           <!-- Email -->
           <div>
@@ -38,7 +67,7 @@ import { AuthService } from '../../../core/services/auth.service';
               required
               email
               placeholder="tua@email.com"
-              [disabled]="isLoading"
+              [disabled]="isLoading || isGoogleLoading"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent transition disabled:bg-gray-100 disabled:cursor-not-allowed">
           </div>
 
@@ -51,7 +80,8 @@ import { AuthService } from '../../../core/services/auth.service';
               <button 
                 type="button"
                 (click)="openResetModal()"
-                class="text-xs text-gray-600 hover:text-black underline">
+                [disabled]="isLoading || isGoogleLoading"
+                class="text-xs text-gray-600 hover:text-black underline disabled:opacity-50">
                 Password dimenticata?
               </button>
             </div>
@@ -62,7 +92,7 @@ import { AuthService } from '../../../core/services/auth.service';
               required
               minlength="6"
               placeholder="••••••••"
-              [disabled]="isLoading"
+              [disabled]="isLoading || isGoogleLoading"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent transition disabled:bg-gray-100 disabled:cursor-not-allowed">
           </div>
 
@@ -83,7 +113,7 @@ import { AuthService } from '../../../core/services/auth.service';
           <!-- Submit Button -->
           <button 
             type="submit"
-            [disabled]="isLoading || loginForm.invalid"
+            [disabled]="isLoading || isGoogleLoading || loginForm.invalid"
             class="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:active:scale-100">
             <span *ngIf="!isLoading" class="flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +139,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <div class="w-full border-t border-gray-300"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white text-gray-500">oppure</span>
+            <span class="px-2 bg-white text-gray-500">Non hai un account?</span>
           </div>
         </div>
 
@@ -135,7 +165,7 @@ import { AuthService } from '../../../core/services/auth.service';
       </div>
     </section>
 
-    <!-- Password Reset Modal -->
+    <!-- Password Reset Modal (stesso di prima) -->
     <div *ngIf="isResetModalOpen" 
          (click)="closeResetModal()"
          class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -235,6 +265,7 @@ export class LoginComponent {
   password = '';
   errorMessage = '';
   isLoading = false;
+  isGoogleLoading = false;
 
   // Reset password state
   isResetModalOpen = false;
@@ -243,6 +274,42 @@ export class LoginComponent {
   resetSuccessMessage = '';
   isResetting = false;
 
+  // Login con Google
+  async onGoogleLogin(): Promise<void> {
+    this.errorMessage = '';
+    this.isGoogleLoading = true;
+    this.cdr.detectChanges();
+
+    console.log('🔐 Tentativo login Google');
+
+    // Salva returnUrl prima del redirect (per mobile)
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/cart';
+    sessionStorage.setItem('authReturnUrl', returnUrl);
+
+    try {
+      const user = await this.authService.loginWithGoogle();
+      
+      if (user.email) { // Se non è un redirect in corso
+        console.log('✅ Google login riuscito:', user.email);
+        console.log('📍 Redirect a:', returnUrl);
+        await this.router.navigateByUrl(returnUrl);
+      }
+      
+    } catch (error: any) {
+      console.error('❌ Errore Google login:', error);
+      
+      // Non mostrare errore se è un redirect in corso
+      if (error.message !== 'REDIRECT_IN_PROGRESS') {
+        this.errorMessage = error || 'Errore durante il login con Google. Riprova.';
+      }
+      
+    } finally {
+      this.isGoogleLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  // Login con email/password (esistente)
   async onLogin(): Promise<void> {
     this.errorMessage = '';
     
@@ -296,7 +363,7 @@ export class LoginComponent {
   // Password Reset Modal
   openResetModal(): void {
     this.isResetModalOpen = true;
-    this.resetEmail = this.email; // Pre-compila con email del form login
+    this.resetEmail = this.email;
     this.resetErrorMessage = '';
     this.resetSuccessMessage = '';
     document.body.style.overflow = 'hidden';
@@ -330,7 +397,6 @@ export class LoginComponent {
       console.log('✅ Email reset inviata');
       this.resetSuccessMessage = `Email inviata a ${this.resetEmail}. Controlla la tua casella di posta.`;
       
-      // Chiudi modal dopo 3 secondi
       setTimeout(() => {
         this.closeResetModal();
       }, 3000);
