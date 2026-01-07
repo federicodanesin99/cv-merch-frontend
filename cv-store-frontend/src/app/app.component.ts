@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@vercel/analytics';
+import { Component, OnInit, inject } from '@angular/core';
+import { inject as injectAnalytics } from '@vercel/analytics';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { ProductService } from './core/services/product.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,12 @@ import { FooterComponent } from './shared/components/footer/footer.component';
   styles: []
 })
 export class AppComponent implements OnInit {
-   ngOnInit() {
-    inject();
+  private productService = inject(ProductService); // ✅ Inietta ProductService
+
+  ngOnInit() {
+    injectAnalytics();
+    
+    console.log('🚀 App initialized');
+    this.productService.loadProducts();
   }
 }
