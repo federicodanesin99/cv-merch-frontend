@@ -56,8 +56,8 @@ import { Router } from '@angular/router';
           <span class="text-gray-400 text-6xl">📦</span>
         </div>
 
-        <!-- Color badge -->
-        <div *ngIf="!product.isComingSoon" 
+        <!-- Color badge - SOLO SE ha colori -->
+        <div *ngIf="!product.isComingSoon && hasColors" 
              class="absolute top-3 left-3 bg-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
           {{ selectedColor }}
         </div>
@@ -111,8 +111,8 @@ import { Router } from '@angular/router';
 
             <!-- Form espanso -->
             <div *ngIf="showInterestForm && !hasRegisteredInterest" class="space-y-3">
-              <!-- Preferenze -->
-              <div>
+              <!-- Preferenze SOLO se il prodotto ha colori/taglie -->
+              <div *ngIf="hasColors">
                 <label class="block text-xs font-semibold text-gray-700 mb-2">
                   Colore preferito (opzionale)
                 </label>
@@ -125,7 +125,7 @@ import { Router } from '@angular/router';
                 </select>
               </div>
 
-              <div>
+              <div *ngIf="hasSizes">
                 <label class="block text-xs font-semibold text-gray-700 mb-2">
                   Taglia preferita (opzionale)
                 </label>
@@ -136,6 +136,11 @@ import { Router } from '@angular/router';
                     {{ size }}
                   </option>
                 </select>
+              </div>
+
+              <!-- Messaggio se non ha né colori né taglie -->
+              <div *ngIf="!hasColors && !hasSizes" class="text-center text-sm text-gray-600 py-2">
+                Ti avviseremo quando questo prodotto sarà disponibile
               </div>
 
               <!-- Errori -->
@@ -176,8 +181,8 @@ import { Router } from '@angular/router';
 
         <!-- ========== NORMALE PRODUCT SECTION ========== -->
         <div *ngIf="!product.isComingSoon">
-          <!-- Color selector -->
-          <div class="mb-4">
+          <!-- Color selector - SOLO SE ha colori -->
+          <div *ngIf="hasColors" class="mb-4">
             <label class="block text-xs md:text-sm font-semibold mb-3">Colore</label>
             <div class="flex gap-2 flex-wrap pb-6">
               <div *ngFor="let color of product.colors"
@@ -189,8 +194,8 @@ import { Router } from '@angular/router';
             </div>
           </div>
 
-          <!-- Size selector -->
-          <div class="mb-4">
+          <!-- Size selector - SOLO SE ha taglie multiple o significative -->
+          <div *ngIf="hasSizes" class="mb-4">
             <div class="flex justify-between items-center mb-2">
               <label class="text-xs md:text-sm font-semibold">Taglia</label>
               <button *ngIf="product.sizeGuide" 
@@ -343,8 +348,20 @@ export class ProductCardComponent {
 
   ngOnInit(): void {
     if (this.product) {
-      this.selectedColor = this.product.colors[0];
-      this.selectedSize = this.product.sizes[0];
+      // ✅ Gestisci colore iniziale
+      if (this.hasColors) {
+        this.selectedColor = this.product.colors[0];
+      } else {
+        this.selectedColor = 'Standard';
+      }
+      
+      // ✅ Gestisci taglia iniziale
+      if (this.hasSizes) {
+        this.selectedSize = this.product.sizes[0];
+      } else {
+        this.selectedSize = 'Unica';
+      }
+      
       this.updateImages();
 
       // Controlla se utente ha già registrato interesse
@@ -352,6 +369,24 @@ export class ProductCardComponent {
         this.checkExistingInterest();
       }
     }
+  }
+
+  // ✅ NUOVO: Getter per verificare se ha colori validi
+  get hasColors(): boolean {
+    return this.product.colors && 
+           this.product.colors.length > 0 && 
+           !this.product.colors.includes('Standard');
+  }
+
+  // ✅ NUOVO: Getter per verificare se ha taglie significative
+  get hasSizes(): boolean {
+    if (!this.product.sizes || this.product.sizes.length === 0) return false;
+    
+    // Nascondi se ha solo una taglia "Unica", "Standard", "One Size"
+    const singleNonMeaningfulSize = this.product.sizes.length === 1 && 
+      ['Unica', 'Standard', 'One Size', 'OS'].includes(this.product.sizes[0]);
+    
+    return !singleNonMeaningfulSize;
   }
 
   get showDiscount(): boolean {
@@ -418,7 +453,6 @@ export class ProductCardComponent {
     const user = this.authService.getCurrentUser();
     
     if (!user) {
-      // Redirect a login con returnUrl
       this.router.navigate(['/auth/login'], {
         queryParams: { 
           returnUrl: `/products`,
@@ -467,7 +501,6 @@ export class ProductCardComponent {
       this.hasRegisteredInterest = true;
       this.showInterestForm = false;
       
-      // Mostra messaggio successo
       alert('✅ Perfetto! Ti avviseremo via email quando il prodotto sarà disponibile.');
       
     } catch (error: any) {
