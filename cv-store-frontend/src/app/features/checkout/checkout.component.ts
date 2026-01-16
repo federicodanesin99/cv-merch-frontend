@@ -70,7 +70,7 @@ import { CartItem } from '../../core/models/cart-item.model';
           
           <div *ngIf="totals.promoDiscount > 0 && appliedPromo" 
                class="flex justify-between text-green-600">
-            <span>Codice {{ appliedPromo.code }}</span>
+            <span>Codici: {{ appliedPromo.codes ? appliedPromo.codes.join(', ') : appliedPromo.code }}</span>
             <span>-€{{ totals.promoDiscount.toFixed(2) }}</span>
           </div>
           
@@ -175,14 +175,14 @@ export class CheckoutComponent implements OnInit {
 
   cartItems$!: Observable<CartItem[]>;
   appliedPromo$!: Observable<any>;
-  
+
   // Customer info
   customerFirstName = '';
   customerLastName = '';
   customerEmail = '';
   customerPhone = '';
   paymentMethod: 'paypal' | 'revolut' = 'paypal';
-  
+
   // Promo
   promoCode = '';
   promoMessage = '';
@@ -191,20 +191,20 @@ export class CheckoutComponent implements OnInit {
   promoCodesVisible = true;
   bundleDiscountPercent = 5;
   isValidatingPromo = false;
-  
+
   // Modal state
   isUniqueCodeModalOpen = false;
   uniqueCode = '';
   orderTotal = 0;
   paymentUrl = '';
-  
+
   // Submit state
   isSubmitting = false;
 
   ngOnInit(): void {
     this.cartItems$ = this.cartService.cartItems$;
     this.appliedPromo$ = this.cartService.appliedPromo$;
-    
+
     this.appliedPromo$.subscribe(promo => {
       this.appliedPromo = promo;
     });
@@ -240,7 +240,7 @@ export class CheckoutComponent implements OnInit {
 
   applyPromoCode(): void {
     const code = this.promoCode.trim().toUpperCase();
-    
+
     if (!code) {
       this.promoMessage = 'Inserisci un codice';
       this.promoMessageClass = 'text-red-600';
@@ -257,21 +257,42 @@ export class CheckoutComponent implements OnInit {
     const totals = this.cartService.getTotals();
     const afterBundle = totals.subtotal - totals.bundleDiscount;
 
-    this.promoService.validatePromoCode(code, this.customerEmail, afterBundle)
+    // Concatena al codice precedente se esiste
+    let codesToSend = code;
+    if (this.appliedPromo) {
+      // Usa `codes` array se disponibile (dal nuovo backend), altrimenti `code` singolo
+      const existingCodes = this.appliedPromo.codes ? this.appliedPromo.codes.join(',') : this.appliedPromo.code;
+      if (existingCodes) {
+        codesToSend = existingCodes + ',' + code;
+      }
+    }
+
+    this.promoService.validatePromoCode(codesToSend, this.customerEmail, afterBundle)
       .subscribe({
         next: (result) => {
           this.isValidatingPromo = false;
-          
+
           if (result.valid) {
-            this.appliedPromo = result;
-            this.cartService.applyPromo(result);
-            this.promoMessage = result.message || 'Codice applicato!';
+            // Map backend response to what CartService expects
+            const mappedResult = {
+              ...result,
+              discount: result.overallDiscount || result.discount, // Handle new vs old structure
+              code: result.codes ? result.codes.join(', ') : result.code // Fallback for display
+            };
+
+            this.appliedPromo = mappedResult;
+            this.cartService.applyPromo(mappedResult);
+            this.promoMessage = result.message || 'Codici applicati!';
             this.promoMessageClass = 'text-green-600';
+            this.promoCode = ''; // Clear input on success
           } else {
             this.promoMessage = result.message || 'Codice non valido';
             this.promoMessageClass = 'text-red-600';
-            this.appliedPromo = null;
-            this.cartService.clearPromo();
+            // Do NOT clear appliedPromo if just adding a new one failed, 
+            // unless the backend says everything is invalid.
+            // Current backend returns valid=false if ANY fail? 
+            // My backend implementation returns error 400 if any code fails. 
+            // So we don't update appliedPromo, keeping the valid ones.
           }
         },
         error: (error) => {
@@ -295,32 +316,33 @@ export class CheckoutComponent implements OnInit {
     this.isSubmitting = true;
 
     const fullName = `${this.customerFirstName} ${this.customerLastName}`;
-    
+
     // Get cart items synchronously
     let items: CartItem[] = [];
     this.cartItems$.subscribe(cartItems => items = cartItems).unsubscribe();
 
     const orderData: any = {
-        customerEmail: this.customerEmail,
-        customerName: fullName,
-        customerPhone: this.customerPhone,
-        paymentMethod: this.paymentMethod, // Ora è tipizzato correttamente
-        promoCode: this.appliedPromo ? this.appliedPromo.code : null,
-        items: items.map(item => ({
-            productId: item.product.id,
-            color: item.color,
-            size: item.size,
-            quantity: item.quantity
-        }))
+      customerEmail: this.customerEmail,
+      customerName: fullName,
+      customerPhone: this.customerPhone,
+      paymentMethod: this.paymentMethod, // Ora è tipizzato correttamente
+      // Send all codes as comma-separated string
+      promoCode: this.appliedPromo ? (this.appliedPromo.codes ? this.appliedPromo.codes.join(',') : this.appliedPromo.code) : null,
+      items: items.map(item => ({
+        productId: item.product.id,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity
+      }))
     };
 
     this.orderService.createOrder(orderData).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        
+
         // Salva ordine in sessionStorage
         this.orderService.saveLastOrder(response);
-        
+
         // Mostra modal con codice univoco
         this.uniqueCode = response.uniqueCode;
         this.orderTotal = response.total;

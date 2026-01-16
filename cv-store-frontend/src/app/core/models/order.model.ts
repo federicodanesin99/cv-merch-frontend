@@ -25,4 +25,6 @@ export interface PromoCodeValidation {
   code: string;
   discount: number;
   message: string;
+  codes?: string[];
+  overallDiscount?: number;
 }
