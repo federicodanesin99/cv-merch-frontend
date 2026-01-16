@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3001',
+  apiUrl: 'https://cv-merch-backend.onrender.com',
   firebase: {
     apiKey: "AIzaSyACfhm7knHJQ3-FNTvLCgRNvS555d6TStU",
     authDomain: "cv-store-merch.firebaseapp.com",
